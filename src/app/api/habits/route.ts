@@ -20,10 +20,12 @@ export async function GET(req: Request) {
         )
       }
 
-      // Actually standard date.getDay() is 0=Sun, 1=Mon... 6=Sat.
+      // Use UTC methods to avoid timezone shifts since dateStr is parsed as UTC midnight
+      // Standard getUTCDay() is 0=Sun, 1=Mon... 6=Sat.
+      const dayOfWeek = date.getUTCDay()
       // BR-023: Weekly habits appear on selected days only (0=Mon, 6=Sun)
-      const brDayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1
-      const dayOfMonth = date.getDate()
+      const brDayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+      const dayOfMonth = date.getUTCDate()
 
       const habits = await prisma.habit.findMany({
         where: {
