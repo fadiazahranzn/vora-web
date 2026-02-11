@@ -49,16 +49,32 @@ export default function RegisterPage() {
     setServerError(null)
 
     try {
-      // Mock Registration Logic
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate network delay
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
 
-      if (data.email === 'exists@example.com') {
-        throw new Error('An account with this email already exists')
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Registration failed')
       }
 
-      console.log('Registration successful', data)
-      router.push('/')
-      router.refresh()
+      // Auto-login after successful registration
+      const signInResult = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      })
+
+      if (signInResult?.error) {
+        // If auto-login fails, redirect to login page anyway
+        router.push('/login?registered=true')
+      } else {
+        router.push('/')
+        router.refresh()
+      }
     } catch (err) {
       if (err instanceof Error) {
         setServerError(err.message)
