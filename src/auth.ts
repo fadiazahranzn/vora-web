@@ -2,8 +2,13 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { prisma } from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
 import { compare } from 'bcryptjs'
+import { authConfig } from './auth.config'
+
+// Use a direct PrismaClient for auth operations to avoid
+// type inference issues from the soft-delete $extends wrapper.
+const prisma = new PrismaClient()
 
 export const {
   handlers: { GET, POST },
@@ -11,12 +16,13 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true, // STORY-005 Requirement: Link Google to existing accounts
+      allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -35,7 +41,7 @@ export const {
           },
         })
 
-        // BR-006: Account Lockout Logic (STORY-006)
+        // Account Lockout Logic (STORY-006)
         if (user?.lockedUntil && user.lockedUntil > new Date()) {
           throw new Error(
             'Too many failed attempts. Please try again in 15 minutes.'
@@ -52,12 +58,12 @@ export const {
         )
 
         if (!isPasswordValid) {
-          // Increment failed attempts
           const newAttempts = user.failedLoginAttempts + 1
-          const updates: any = { failedLoginAttempts: newAttempts }
+          const updates: { failedLoginAttempts: number; lockedUntil?: Date } = {
+            failedLoginAttempts: newAttempts,
+          }
 
           if (newAttempts >= 5) {
-            // Lock for 15 minutes
             updates.lockedUntil = new Date(Date.now() + 15 * 60 * 1000)
           }
 
@@ -89,26 +95,4 @@ export const {
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id
-      }
-      return token
-    },
-    async session({ session, token }) {
-      if (token?.id) {
-        session.user.id = token.id as string
-      }
-      return session
-    },
-  },
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  pages: {
-    signIn: '/login',
-  },
-  secret: process.env.NEXTAUTH_SECRET,
 })
