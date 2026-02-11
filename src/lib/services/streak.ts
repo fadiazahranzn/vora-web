@@ -1,5 +1,5 @@
 import { Habit, HabitCompletion } from '@prisma/client'
-import { eachDayOfInterval, format, getUTCDay, getUTCDate } from 'date-fns'
+import { format } from 'date-fns'
 
 interface StreakResult {
   currentStreak: number
@@ -59,11 +59,22 @@ export function calculateStreaks(
     }
   }
 
-  // 3. Generate all days in interval (using UTC dates)
-  const allDays = eachDayOfInterval({
-    start: firstCompletion,
-    end: todayUtc,
-  })
+  // 3. Generate all days in interval using safe manual iteration (UTC only)
+  // This avoids date-fns eachDayOfInterval potential local timezone behaviors
+  const allDays: Date[] = []
+  const current = new Date(firstCompletion)
+
+  // Safety break to prevent infinite loops if something is weird
+  // Max 10 years (3650 days)
+  let sanityCounter = 0
+  const MAX_DAYS = 3650
+
+  while (current <= todayUtc && sanityCounter < MAX_DAYS) {
+    allDays.push(new Date(current))
+    // Move to next day safely in UTC
+    current.setUTCDate(current.getUTCDate() + 1)
+    sanityCounter++
+  }
 
   // 4. Map DB completions to YYYY-MM-DD strings for lookup
   const completedDates = new Set(
@@ -129,16 +140,16 @@ function isScheduled(habit: Habit, date: Date): boolean {
 
   if (habit.frequency === 'WEEKLY') {
     if (!habit.weeklyDays || habit.weeklyDays.length === 0) return false
-    // Use UTC day to align with our UTC date objects
-    const dayOfWeek = getUTCDay(date)
+    // Use standard Date methods
+    const dayOfWeek = date.getUTCDay() // 0=Sun...
     const adjustedDay = dayOfWeek === 0 ? 6 : dayOfWeek - 1
     return habit.weeklyDays.includes(adjustedDay)
   }
 
   if (habit.frequency === 'MONTHLY') {
     if (!habit.monthlyDates || habit.monthlyDates.length === 0) return false
-    // Use UTC date
-    const dom = getUTCDate(date)
+    // Use standard Date methods
+    const dom = date.getUTCDate()
     return habit.monthlyDates.includes(dom)
   }
 
