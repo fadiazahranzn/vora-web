@@ -3,6 +3,7 @@ import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import { registerSchema } from '@/lib/validations/auth'
 import { z } from 'zod'
+import { seedDefaultCategories } from '@/lib/services/category-seeding'
 
 export async function POST(req: Request) {
   try {
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
     const passwordHash = await hash(password, 12)
 
     // 4. Create user and seed default categories in a transaction
-    const user = await prisma.$transaction(async (tx) => {
+    const user = await prisma.$transaction(async (tx: any) => {
       const newUser = await tx.user.create({
         data: {
           name,
@@ -38,43 +39,7 @@ export async function POST(req: Request) {
       })
 
       // Seed default categories (BR-041)
-      const defaultCategories = [
-        {
-          name: 'Health',
-          icon: '💪',
-          defaultColor: '#4ADE80',
-          isDefault: true,
-          sortOrder: 0,
-        },
-        {
-          name: 'Work',
-          icon: '💼',
-          defaultColor: '#60A5FA',
-          isDefault: true,
-          sortOrder: 1,
-        },
-        {
-          name: 'Personal',
-          icon: '🏠',
-          defaultColor: '#F472B6',
-          isDefault: true,
-          sortOrder: 2,
-        },
-        {
-          name: 'Learning',
-          icon: '📚',
-          defaultColor: '#FBBF24',
-          isDefault: true,
-          sortOrder: 3,
-        },
-      ]
-
-      await tx.category.createMany({
-        data: defaultCategories.map((cat) => ({
-          ...cat,
-          userId: newUser.id,
-        })),
-      })
+      await seedDefaultCategories(newUser.id, tx)
 
       return newUser
     })

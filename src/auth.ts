@@ -6,6 +6,8 @@ import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { authConfig } from './auth.config'
 
+import { seedDefaultCategories } from '@/lib/services/category-seeding'
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -14,6 +16,15 @@ export const {
 } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
+  events: {
+    async createUser({ user }) {
+      if (user.id) {
+        await prisma.$transaction(async (tx) => {
+          await seedDefaultCategories(user.id!, tx as any)
+        })
+      }
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
