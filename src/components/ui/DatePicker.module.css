@@ -1,0 +1,211 @@
+.datePickerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-4);
+    margin-bottom: var(--vora-space-6);
+}
+
+.dateNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vora-space-4);
+}
+
+.dateDisplay {
+    display: flex;
+    align-items: center;
+    background: var(--vora-color-bg-secondary);
+    padding: var(--vora-space-2) var(--vora-space-4);
+    border-radius: var(--vora-radius-full);
+    gap: var(--vora-space-3);
+    cursor: pointer;
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+}
+
+.dateDisplay:hover {
+    background: var(--vora-color-bg-tertiary);
+    box-shadow: var(--vora-shadow-sm);
+}
+
+.dateIcon {
+    color: var(--vora-color-accent-primary);
+}
+
+.dateText {
+    font-weight: var(--vora-font-weight-semibold);
+    color: var(--vora-color-text-primary);
+    white-space: nowrap;
+    min-width: 120px;
+    text-align: center;
+}
+
+.navBtn {
+    background: var(--vora-color-bg-secondary);
+    border: none;
+    color: var(--vora-color-text-secondary);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--vora-radius-full);
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+}
+
+.navBtn:hover:not(:disabled) {
+    background: var(--vora-color-accent-subtle);
+    color: var(--vora-color-accent-primary);
+    transform: scale(1.05);
+}
+
+.navBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.todayChip {
+    font-size: var(--vora-font-size-caption);
+    background: var(--vora-color-accent-primary);
+    color: var(--vora-color-text-inverse);
+    border: none;
+    padding: 4px 12px;
+    border-radius: var(--vora-radius-full);
+    cursor: pointer;
+    font-weight: var(--vora-font-weight-semibold);
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+}
+
+.todayChip:hover {
+    background: var(--vora-color-accent-hover);
+    transform: scale(1.05);
+}
+
+/* Calendar Popup */
+.calendarPopup {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: var(--vora-space-2);
+    background: var(--vora-color-card-bg);
+    border: 1px solid var(--vora-color-card-border);
+    border-radius: var(--vora-radius-lg);
+    box-shadow: var(--vora-shadow-lg);
+    padding: var(--vora-space-4);
+    z-index: var(--vora-z-dropdown);
+    min-width: 320px;
+}
+
+.calendarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--vora-space-4);
+}
+
+.calendarTitle {
+    font-size: var(--vora-font-size-h3);
+    font-weight: var(--vora-font-weight-semibold);
+    color: var(--vora-color-text-primary);
+}
+
+.monthNav {
+    display: flex;
+    gap: var(--vora-space-2);
+}
+
+.monthNavBtn {
+    background: transparent;
+    border: none;
+    color: var(--vora-color-text-secondary);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--vora-radius-sm);
+    transition: all var(--vora-duration-fast);
+}
+
+.monthNavBtn:hover {
+    background: var(--vora-color-bg-tertiary);
+    color: var(--vora-color-accent-primary);
+}
+
+.weekDays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--vora-space-1);
+    margin-bottom: var(--vora-space-2);
+}
+
+.weekDay {
+    font-size: var(--vora-font-size-caption);
+    font-weight: var(--vora-font-weight-semibold);
+    color: var(--vora-color-text-tertiary);
+    text-align: center;
+    padding: var(--vora-space-2);
+}
+
+.daysGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--vora-space-1);
+}
+
+.dayCell {
+    position: relative;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--vora-radius-sm);
+    cursor: pointer;
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+    background: transparent;
+    border: 1px solid transparent;
+    font-size: var(--vora-font-size-caption);
+    color: var(--vora-color-text-primary);
+}
+
+.dayCell:hover:not(.dayCellDisabled) {
+    background: var(--vora-color-bg-tertiary);
+}
+
+.dayCellToday {
+    border-color: var(--vora-color-accent-primary);
+    font-weight: var(--vora-font-weight-bold);
+}
+
+.dayCellSelected {
+    background: var(--vora-color-accent-primary);
+    color: var(--vora-color-text-inverse);
+}
+
+.dayCellDisabled {
+    color: var(--vora-color-text-tertiary);
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.dayCellOtherMonth {
+    color: var(--vora-color-text-tertiary);
+    opacity: 0.5;
+}
+
+.completionDot {
+    position: absolute;
+    bottom: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--vora-color-success);
+}
+
+.dayCellSelected .completionDot {
+    background: var(--vora-color-text-inverse);
+}

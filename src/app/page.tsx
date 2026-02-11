@@ -9,7 +9,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar'
 import { FAB } from '@/components/ui/FAB'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
-import { DateNav } from '@/components/ui/DateNav'
+import { DatePicker } from '@/components/ui/DatePicker'
 import { HabitCard } from '@/components/habit/HabitCard'
 import { HabitWizard } from '@/components/habit/HabitWizard'
 import { EditHabitModal } from '@/components/habit/EditHabitModal'
@@ -53,12 +53,24 @@ export default function Home() {
   }, [])
 
   const formattedDate = format(selectedDate, 'yyyy-MM-dd')
+  const formattedMonth = format(selectedDate, 'yyyy-MM')
 
   const { data: habits = [], isLoading } = useQuery<Habit[]>({
     queryKey: ['habits', formattedDate],
     queryFn: async () => {
       const res = await fetch(`/api/habits?date=${formattedDate}`)
       if (!res.ok) throw new Error('Failed to fetch habits')
+      return res.json()
+    },
+    enabled: !!session,
+  })
+
+  // Fetch completion dates for calendar dots
+  const { data: completionData } = useQuery<{ dates: string[] }>({
+    queryKey: ['completions', formattedMonth],
+    queryFn: async () => {
+      const res = await fetch(`/api/completions/dates?month=${formattedMonth}`)
+      if (!res.ok) throw new Error('Failed to fetch completion dates')
       return res.json()
     },
     enabled: !!session,
@@ -214,7 +226,11 @@ export default function Home() {
         </section>
 
         {/* Date Navigation */}
-        <DateNav selectedDate={selectedDate} onDateChange={setSelectedDate} />
+        <DatePicker
+          selectedDate={selectedDate}
+          onDateChange={setSelectedDate}
+          completionDates={completionData?.dates || []}
+        />
 
         {/* Habits List */}
         <section className={styles.habitSection}>
