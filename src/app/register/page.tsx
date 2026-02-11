@@ -11,13 +11,11 @@ import { Card } from '@/components/ui/Card'
 import { registerSchema, RegisterValues } from '@/lib/validations/auth'
 import styles from './register.module.css'
 
-// This would normally come from NextAuth
-const handleNextAuthSignIn = async (provider: string, _options?: any) => {
-  console.log(`Mock sign in with ${provider}`, _options)
-  return new Promise((resolve) => setTimeout(resolve, 1000))
-}
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -59,7 +57,8 @@ export default function RegisterPage() {
       }
 
       console.log('Registration successful', data)
-      window.location.href = '/' // Redirect to dashboard
+      router.push('/')
+      router.refresh()
     } catch (err) {
       if (err instanceof Error) {
         setServerError(err.message)
@@ -74,8 +73,7 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await handleNextAuthSignIn('google')
-      // window.location.href = "/";
+      await signIn('google', { callbackUrl: '/' })
     } catch {
       setServerError('Google sign in failed')
     } finally {

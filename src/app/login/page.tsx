@@ -11,13 +11,13 @@ import { Card } from '@/components/ui/Card'
 import { loginSchema, LoginValues } from '@/lib/validations/auth'
 import styles from './login.module.css'
 
-// This would normally come from NextAuth
-const handleNextAuthSignIn = async (provider: string, _options?: any) => {
-  console.log(`Mock sign in with ${provider}`, _options)
-  return new Promise((resolve) => setTimeout(resolve, 1000))
-}
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+
+// ... existing imports
 
 export default function LoginPage() {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
@@ -41,10 +41,6 @@ export default function LoginPage() {
     setServerError(null)
 
     try {
-      // Mock Authentication Logic
-      // In real implementation: await signIn("credentials", { ...data, redirect: false })
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulate network delay
-
       if (attempts >= 4) {
         throw new Error(
           'Too many failed attempts. Please try again in 15 minutes.'
@@ -58,17 +54,20 @@ export default function LoginPage() {
         )
       }
 
-      if (
-        data.email === 'test@example.com' &&
-        data.password === 'password123'
-      ) {
-        // Success
-        console.log('Login successful')
-        window.location.href = '/' // Redirect to dashboard
-      } else {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      })
+
+      if (result?.error) {
         setAttempts((prev) => prev + 1)
         throw new Error('Invalid email or password')
       }
+
+      // Login successful
+      router.push('/')
+      router.refresh()
     } catch (err) {
       if (err instanceof Error) {
         setServerError(err.message)
@@ -83,8 +82,7 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      await handleNextAuthSignIn('google')
-      // window.location.href = "/";
+      await signIn('google', { callbackUrl: '/' })
     } catch {
       setServerError('Google sign in failed')
     } finally {
