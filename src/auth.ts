@@ -16,6 +16,7 @@ export const {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true, // STORY-005 Requirement: Link Google to existing accounts
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -28,13 +29,18 @@ export const {
           return null
         }
 
-        // We use the base prisma client here if possible or the extended one.
-        // The extended one filters out soft-deleted users automatically.
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email as string,
           },
         })
+
+        // BR-006: Account Lockout Logic (STORY-006)
+        if (user?.lockedUntil && user.lockedUntil > new Date()) {
+          throw new Error(
+            'Too many failed attempts. Please try again in 15 minutes.'
+          )
+        }
 
         if (!user || !user.passwordHash) {
           return null
@@ -46,14 +52,39 @@ export const {
         )
 
         if (!isPasswordValid) {
+          // Increment failed attempts
+          const newAttempts = user.failedLoginAttempts + 1
+          const updates: any = { failedLoginAttempts: newAttempts }
+
+          if (newAttempts >= 5) {
+            // Lock for 15 minutes
+            updates.lockedUntil = new Date(Date.now() + 15 * 60 * 1000)
+          }
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: updates,
+          })
+
           return null
+        }
+
+        // Success: Reset failed attempts
+        if (user.failedLoginAttempts > 0 || user.lockedUntil) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: {
+              failedLoginAttempts: 0,
+              lockedUntil: null,
+            },
+          })
         }
 
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          image: user.avatarUrl,
+          image: user.image || user.avatarUrl,
         }
       },
     }),

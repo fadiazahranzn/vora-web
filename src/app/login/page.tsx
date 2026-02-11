@@ -21,9 +21,6 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
 
-  // Example failed attempts counter for locking logic (client-side only for demo)
-  const [attempts, setAttempts] = useState(0)
-
   const {
     register,
     handleSubmit,
@@ -41,19 +38,6 @@ export default function LoginPage() {
     setServerError(null)
 
     try {
-      if (attempts >= 4) {
-        throw new Error(
-          'Too many failed attempts. Please try again in 15 minutes.'
-        )
-      }
-
-      if (data.email === 'locked@example.com') {
-        setAttempts(5)
-        throw new Error(
-          'Too many failed attempts. Please try again in 15 minutes.'
-        )
-      }
-
       const result = await signIn('credentials', {
         redirect: false,
         email: data.email,
@@ -61,8 +45,13 @@ export default function LoginPage() {
       })
 
       if (result?.error) {
-        setAttempts((prev) => prev + 1)
-        throw new Error('Invalid email or password')
+        // NextAuth returns generic errors usually, but we can throw what we get or
+        // a generic one for security (avoiding user enumeration).
+        throw new Error(
+          result.error === 'CredentialsSignin'
+            ? 'Invalid email or password'
+            : result.error
+        )
       }
 
       // Login successful
@@ -84,7 +73,7 @@ export default function LoginPage() {
     try {
       await signIn('google', { callbackUrl: '/' })
     } catch {
-      setServerError('Google sign in failed')
+      setServerError('Google sign-in failed. Please try again.')
     } finally {
       setIsLoading(false)
     }

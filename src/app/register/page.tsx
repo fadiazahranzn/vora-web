@@ -75,7 +75,7 @@ export default function RegisterPage() {
     try {
       await signIn('google', { callbackUrl: '/' })
     } catch {
-      setServerError('Google sign in failed')
+      setServerError('Google sign-in failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
