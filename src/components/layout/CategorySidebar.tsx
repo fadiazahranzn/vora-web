@@ -1,10 +1,31 @@
 'use client'
 
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useState, useMemo } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
-import { Layers, Plus, Settings2 } from 'lucide-react'
+import { Layers, Plus, Settings2, GripVertical } from 'lucide-react'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers'
 import { CategoryModal } from './CategoryModal'
 
 interface Category {
@@ -16,6 +37,81 @@ interface Category {
   habitCount: number
 }
 
+interface SortableItemProps {
+  category: Category
+  activeCategoryId: string
+  onSelect: (id: string, e: React.MouseEvent) => void
+  onEdit: (category: Category) => void
+}
+
+function SortableCategoryItem({
+  category,
+  activeCategoryId,
+  onSelect,
+  onEdit,
+}: SortableItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 1 : 0,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={clsx(
+        'vora-sidebar-item-wrapper',
+        isDragging && 'vora-sidebar-item-wrapper--dragging'
+      )}
+    >
+      <button
+        onClick={(e) => onSelect(category.id, e)}
+        className={clsx(
+          'vora-sidebar-item',
+          'vora-sidebar-item--has-actions',
+          activeCategoryId === category.id && 'vora-sidebar-item--active'
+        )}
+      >
+        <div
+          className="vora-sidebar-item-drag-handle"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical size={14} />
+        </div>
+        <span className="vora-sidebar-item-icon">{category.icon}</span>
+        <span className="vora-sidebar-item-name">{category.name}</span>
+
+        <div className="vora-category-actions">
+          <button
+            className="vora-category-edit-btn"
+            onClick={() => onEdit(category)}
+            aria-label={`Edit ${category.name}`}
+          >
+            <Settings2 size={14} />
+          </button>
+          {category.habitCount > 0 && (
+            <span className="vora-sidebar-item-count">
+              {category.habitCount}
+            </span>
+          )}
+        </div>
+      </button>
+    </div>
+  )
+}
+
 export default function CategorySidebar({
   onSelectAction,
 }: {
@@ -25,11 +121,12 @@ export default function CategorySidebar({
   const router = useRouter()
   const pathname = usePathname()
   const activeCategoryId = searchParams.get('category') || 'all'
+  const queryClient = useQueryClient()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
 
-  const { data: categories, isLoading } = useQuery<Category[]>({
+  const { data: categories = [], isLoading } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await fetch('/api/categories')
@@ -37,6 +134,69 @@ export default function CategorySidebar({
       return res.json()
     },
   })
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px movement before drag starts
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
+  const reorderMutation = useMutation({
+    mutationFn: async (orderedIds: string[]) => {
+      const res = await fetch('/api/categories/reorder', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderedIds }),
+      })
+      if (!res.ok) throw new Error('Failed to reorder categories')
+      return res.json()
+    },
+    onMutate: async (orderedIds) => {
+      await queryClient.cancelQueries({ queryKey: ['categories'] })
+      const previousCategories = queryClient.getQueryData(['categories'])
+
+      // Optimistically update the cache
+      if (previousCategories) {
+        const newCategories = [...(previousCategories as Category[])].sort(
+          (a, b) => {
+            return orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id)
+          }
+        )
+        queryClient.setQueryData(['categories'], newCategories)
+      }
+
+      return { previousCategories }
+    },
+    onError: (err, newOrder, context) => {
+      if (context?.previousCategories) {
+        queryClient.setQueryData(['categories'], context.previousCategories)
+      }
+      // In a real app, show a toast here
+      console.error('Reorder failed:', err)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] })
+    },
+  })
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      const oldIndex = categories.findIndex((c) => c.id === active.id)
+      const newIndex = categories.findIndex((c) => c.id === over.id)
+
+      const newCategories = arrayMove(categories, oldIndex, newIndex)
+      reorderMutation.mutate(newCategories.map((c) => c.id))
+    }
+  }
+
+  const categoryIds = useMemo(() => categories.map((c) => c.id), [categories])
 
   const handleCategorySelect = (id: string, e: React.MouseEvent) => {
     // Prevent selection if clicking edit button
@@ -96,35 +256,27 @@ export default function CategorySidebar({
             ))}
           </div>
         ) : (
-          categories?.map((category) => (
-            <button
-              key={category.id}
-              onClick={(e) => handleCategorySelect(category.id, e)}
-              className={clsx(
-                'vora-sidebar-item',
-                'vora-sidebar-item--has-actions',
-                activeCategoryId === category.id && 'vora-sidebar-item--active'
-              )}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+          >
+            <SortableContext
+              items={categoryIds}
+              strategy={verticalListSortingStrategy}
             >
-              <span className="vora-sidebar-item-icon">{category.icon}</span>
-              <span className="vora-sidebar-item-name">{category.name}</span>
-
-              <div className="vora-category-actions">
-                <button
-                  className="vora-category-edit-btn"
-                  onClick={() => handleEditCategory(category)}
-                  aria-label={`Edit ${category.name}`}
-                >
-                  <Settings2 size={14} />
-                </button>
-                {category.habitCount > 0 && (
-                  <span className="vora-sidebar-item-count">
-                    {category.habitCount}
-                  </span>
-                )}
-              </div>
-            </button>
-          ))
+              {categories.map((category) => (
+                <SortableCategoryItem
+                  key={category.id}
+                  category={category}
+                  activeCategoryId={activeCategoryId}
+                  onSelect={handleCategorySelect}
+                  onEdit={handleEditCategory}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
         )}
       </nav>
 
@@ -176,7 +328,9 @@ export default function CategorySidebar({
           font-size: var(--vora-font-size-body);
           font-weight: var(--vora-font-weight-medium);
           cursor: pointer;
-          transition: all var(--vora-duration-fast);
+          transition:
+            background var(--vora-duration-fast),
+            color var(--vora-duration-fast);
           text-align: left;
           width: 100%;
           position: relative;
@@ -190,6 +344,27 @@ export default function CategorySidebar({
         .vora-sidebar-item--active {
           background: var(--vora-color-accent-subtle);
           color: var(--vora-color-accent-primary);
+        }
+
+        .vora-sidebar-item-drag-handle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--vora-color-text-tertiary);
+          cursor: grab;
+          padding: 2px;
+          margin-left: -4px;
+          border-radius: 4px;
+          opacity: 0;
+          transition: all var(--vora-duration-fast);
+        }
+
+        .vora-sidebar-item:hover .vora-sidebar-item-drag-handle {
+          opacity: 1;
+        }
+
+        .vora-sidebar-item-drag-handle:active {
+          cursor: grabbing;
         }
 
         .vora-sidebar-item-icon {
