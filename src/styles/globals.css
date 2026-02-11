@@ -1,42 +1,366 @@
+/* ═══════════════════════════════════════
+   VORA DESIGN SYSTEM — CSS Custom Properties
+   ═══════════════════════════════════════ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ── Colors: Light Mode (default) ── */
+  --vora-color-bg-primary: #FFFFFF;
+  --vora-color-bg-secondary: #FFE2E2;
+  --vora-color-bg-tertiary: #FFF0F0;
+  --vora-color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  --vora-color-text-primary: #1A1A1A;
+  --vora-color-text-secondary: #666666;
+  --vora-color-text-tertiary: #999999;
+  --vora-color-text-inverse: #FFFFFF;
+
+  --vora-color-accent-primary: #ED9DFF;
+  --vora-color-accent-hover: #D87BF0;
+  --vora-color-accent-pressed: #C45DE0;
+  --vora-color-accent-subtle: #F5E0FF;
+
+  --vora-color-border-default: #E0E0E0;
+  --vora-color-border-focus: #ED9DFF;
+
+  --vora-color-success: #00C853;
+  --vora-color-success-bg: #E8F5E9;
+  --vora-color-warning: #FFD600;
+  --vora-color-warning-bg: #FFFDE7;
+  --vora-color-error: #FF1744;
+  --vora-color-error-bg: #FFEBEE;
+  --vora-color-info: #2196F3;
+  --vora-color-info-bg: #E3F2FD;
+
+  /* ── Card ── */
+  --vora-color-card-bg: #FFFFFF;
+  --vora-color-card-border: #E0E0E0;
+
+  /* ── Typography ── */
+  --vora-font-family: 'Inter', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, sans-serif;
+
+  --vora-font-size-display: 32px;
+  --vora-font-size-h1: 24px;
+  --vora-font-size-h2: 20px;
+  --vora-font-size-h3: 16px;
+  --vora-font-size-body: 14px;
+  --vora-font-size-caption: 12px;
+  --vora-font-size-overline: 11px;
+
+  --vora-font-weight-regular: 400;
+  --vora-font-weight-medium: 500;
+  --vora-font-weight-semibold: 600;
+  --vora-font-weight-bold: 700;
+
+  --vora-line-height-tight: 1.2;
+  --vora-line-height-normal: 1.4;
+  --vora-line-height-relaxed: 1.5;
+
+  /* ── Spacing (8px grid) ── */
+  --vora-space-0: 0px;
+  --vora-space-1: 4px;
+  --vora-space-2: 8px;
+  --vora-space-3: 12px;
+  --vora-space-4: 16px;
+  --vora-space-5: 20px;
+  --vora-space-6: 24px;
+  --vora-space-8: 32px;
+  --vora-space-10: 40px;
+  --vora-space-12: 48px;
+  --vora-space-16: 64px;
+
+  /* ── Border Radius ── */
+  --vora-radius-sm: 8px;
+  --vora-radius-md: 12px;
+  --vora-radius-lg: 16px;
+  --vora-radius-xl: 24px;
+  --vora-radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --vora-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --vora-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --vora-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+  --vora-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.20);
+  --vora-shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  /* ── Motion ── */
+  --vora-duration-instant: 100ms;
+  --vora-duration-fast: 150ms;
+  --vora-duration-normal: 250ms;
+  --vora-duration-slow: 400ms;
+  --vora-duration-emphasis: 500ms;
+  --vora-duration-celebration: 2000ms;
+  --vora-easing-default: cubic-bezier(0.4, 0, 0.2, 1);
+  --vora-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --vora-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --vora-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-Index ── */
+  --vora-z-base: 0;
+  --vora-z-dropdown: 100;
+  --vora-z-sticky: 200;
+  --vora-z-overlay: 300;
+  --vora-z-modal: 400;
+  --vora-z-toast: 500;
+  --vora-z-tooltip: 600;
+
+  /* ── Layout ── */
+  --vora-sidebar-width: 260px;
+  --vora-topbar-height: 56px;
+  --vora-bottomnav-height: 64px;
+  --vora-content-max-width: 960px;
 }
 
+/* ── Dark Mode ── */
+[data-theme="dark"],
+.dark {
+  --vora-color-bg-primary: #121212;
+  --vora-color-bg-secondary: #1E1E1E;
+  --vora-color-bg-tertiary: #2A2A2A;
+  --vora-color-bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --vora-color-text-primary: #FFFFFF;
+  --vora-color-text-secondary: #AAAAAA;
+  --vora-color-text-tertiary: #777777;
+  --vora-color-text-inverse: #121212;
+
+  --vora-color-accent-primary: #FCD6EF;
+  --vora-color-accent-hover: #FFE4F5;
+  --vora-color-accent-pressed: #F0BAD8;
+  --vora-color-accent-subtle: #3A2040;
+
+  --vora-color-border-default: #3A3A3A;
+  --vora-color-border-focus: #FCD6EF;
+
+  --vora-color-success: #69F0AE;
+  --vora-color-success-bg: #1B3A26;
+  --vora-color-warning: #FFE082;
+  --vora-color-warning-bg: #3A3520;
+  --vora-color-error: #FF8A80;
+  --vora-color-error-bg: #3A1A1A;
+  --vora-color-info: #90CAF9;
+  --vora-color-info-bg: #1A2A3A;
+
+  --vora-color-card-bg: #2A2A2A;
+  --vora-color-card-border: #3A3A3A;
+
+  --vora-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --vora-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --vora-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --vora-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* ── System Theme Auto-Detection ── */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  [data-theme="system"] {
+    --vora-color-bg-primary: #121212;
+    --vora-color-bg-secondary: #1E1E1E;
+    --vora-color-bg-tertiary: #2A2A2A;
+    --vora-color-text-primary: #FFFFFF;
+    --vora-color-text-secondary: #AAAAAA;
+    --vora-color-accent-primary: #FCD6EF;
+    --vora-color-accent-hover: #FFE4F5;
+    --vora-color-border-default: #3A3A3A;
+    --vora-color-border-focus: #FCD6EF;
+    --vora-color-card-bg: #2A2A2A;
+    --vora-color-card-border: #3A3A3A;
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+/* ═══════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+html {
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+body {
+  font-family: var(--vora-font-family);
+  font-size: var(--vora-font-size-body);
+  font-weight: var(--vora-font-weight-regular);
+  line-height: var(--vora-line-height-relaxed);
+  color: var(--vora-color-text-primary);
+  background-color: var(--vora-color-bg-primary);
+  transition: background-color var(--vora-duration-normal) var(--vora-easing-default),
+              color var(--vora-duration-normal) var(--vora-easing-default);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ── Headings ── */
+h1 { font-size: var(--vora-font-size-h1); font-weight: var(--vora-font-weight-bold); line-height: var(--vora-line-height-tight); }
+h2 { font-size: var(--vora-font-size-h2); font-weight: var(--vora-font-weight-semibold); line-height: var(--vora-line-height-tight); }
+h3 { font-size: var(--vora-font-size-h3); font-weight: var(--vora-font-weight-semibold); line-height: var(--vora-line-height-normal); }
+
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--vora-color-border-focus);
+  outline-offset: 2px;
+  border-radius: var(--vora-radius-sm);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
+}
+
+/* ═══════════════════════════════════════
+   COMPONENT UTILITIES (Global)
+   ═══════════════════════════════════════ */
+
+/* ── Button ── */
+.vora-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vora-space-2);
+  font-family: var(--vora-font-family);
+  font-weight: var(--vora-font-weight-semibold);
+  border: none;
+  cursor: pointer;
+  transition: all var(--vora-duration-fast) var(--vora-easing-default);
+  white-space: nowrap;
+}
+
+.vora-btn--primary {
+  background: var(--vora-color-accent-primary);
+  color: var(--vora-color-text-inverse);
+}
+.vora-btn--primary:hover { background: var(--vora-color-accent-hover); }
+.vora-btn--primary:active { background: var(--vora-color-accent-pressed); transform: scale(0.98); }
+
+.vora-btn--secondary {
+  background: transparent;
+  color: var(--vora-color-accent-primary);
+  border: 1px solid var(--vora-color-accent-primary);
+}
+
+.vora-btn--ghost {
+  background: transparent;
+  color: var(--vora-color-text-primary);
+}
+.vora-btn--ghost:hover { background: var(--vora-color-bg-tertiary); }
+
+.vora-btn--danger {
+  background: var(--vora-color-error);
+  color: #FFFFFF;
+}
+
+/* Sizes */
+.vora-btn--sm  { height: 36px; padding: 0 12px; font-size: 12px; border-radius: var(--vora-radius-sm); }
+.vora-btn--md  { height: 44px; padding: 0 16px; font-size: 14px; border-radius: var(--vora-radius-md); }
+.vora-btn--lg  { height: 52px; padding: 0 24px; font-size: 16px; border-radius: var(--vora-radius-md); }
+.vora-btn--full { height: 52px; padding: 0 24px; font-size: 16px; border-radius: var(--vora-radius-md); width: 100%; }
+
+.vora-btn:disabled { opacity: 0.5; pointer-events: none; }
+
+.vora-btn__spinner {
+  width: 20px; height: 20px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: vora-spin 600ms linear infinite;
+}
+@keyframes vora-spin { to { transform: rotate(360deg); } }
+
+/* ── Input ── */
+.vora-input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vora-space-1);
+}
+
+.vora-input__label {
+  font-size: var(--vora-font-size-body);
+  font-weight: var(--vora-font-weight-medium);
+  color: var(--vora-color-text-primary);
+}
+
+.vora-input__container {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--vora-color-border-default);
+  border-radius: var(--vora-radius-md);
+  background: var(--vora-color-bg-primary);
+  transition: border-color var(--vora-duration-fast);
+}
+
+.vora-input__container:focus-within {
+  border-color: var(--vora-color-border-focus);
+  box-shadow: 0 0 0 1px var(--vora-color-border-focus);
+}
+
+.vora-input--error .vora-input__container {
+  border-color: var(--vora-color-error);
+}
+
+.vora-input__field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px;
+  font-family: inherit;
+  font-size: var(--vora-font-size-body);
+  color: var(--vora-color-text-primary);
+  width: 100%;
+}
+
+.vora-input__field:focus {
+  outline: none;
+}
+
+.vora-input__field::placeholder {
+  color: var(--vora-color-text-tertiary);
+}
+
+.vora-input__icon,
+.vora-input__action {
+  padding: 0 12px;
+  color: var(--vora-color-text-secondary);
+  display: flex;
+  align-items: center;
+}
+
+.vora-input__error {
+  font-size: var(--vora-font-size-caption);
+  color: var(--vora-color-error);
+}
+
+.vora-input__helper {
+  font-size: var(--vora-font-size-caption);
+  color: var(--vora-color-text-secondary);
+}
+
+/* ── Card ── */
+.vora-card {
+  background: var(--vora-color-card-bg);
+  border: 1px solid var(--vora-color-card-border);
+  border-radius: var(--vora-radius-lg);
+  padding: var(--vora-space-4);
+  box-shadow: var(--vora-shadow-sm);
+  transition: transform var(--vora-duration-fast), box-shadow var(--vora-duration-fast);
+}
+
+.vora-card--interactive {
+  cursor: pointer;
+}
+.vora-card--interactive:hover {
+  box-shadow: var(--vora-shadow-md);
+  transform: translateY(-2px);
 }
