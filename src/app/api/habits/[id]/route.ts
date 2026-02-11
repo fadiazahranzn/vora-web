@@ -107,7 +107,7 @@ export async function DELETE(
       data: { deletedAt: new Date() },
     })
 
-    return NextResponse.json({ message: 'Habit deleted successfullly' })
+    return NextResponse.json({ message: 'Habit deleted successfully' })
   } catch (error) {
     return handleAuthError(error)
   }
