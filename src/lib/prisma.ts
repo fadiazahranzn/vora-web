@@ -1,4 +1,5 @@
-import { env } from './env'
+import { Pool } from 'pg'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
 const softDeleteModels = [
@@ -14,10 +15,15 @@ const camelCase = (str: string) => {
   return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
-// Extended client with soft-delete middleware
+// Prisma v7 requires a driver adapter for the default "client" engine.
 const prismaClientSingleton = () => {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+  })
+  const adapter = new PrismaPg(pool)
+
   const client = new PrismaClient({
-    log: ['query'],
+    adapter,
   })
 
   return client.$extends({
@@ -44,8 +50,6 @@ const prismaClientSingleton = () => {
         },
         async findUnique({ model, args, query }) {
           if (softDeleteModels.includes(model)) {
-            // Change to findFirst to allow filtering
-            // We must apply the filter manually because we are using the base client
             return (client as any)[camelCase(model)].findFirst({
               ...args,
               where: { deletedAt: null, ...args.where },
@@ -82,4 +86,4 @@ const globalForPrisma = global as unknown as { prisma: PrismaClientSingleton }
 
 export const prisma = globalForPrisma.prisma || prismaClientSingleton()
 
-if (env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma

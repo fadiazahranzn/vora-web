@@ -2,13 +2,9 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import { compare } from 'bcryptjs'
 import { authConfig } from './auth.config'
-
-// Use a direct PrismaClient for auth operations to avoid
-// type inference issues from the soft-delete $extends wrapper.
-const prisma = new PrismaClient()
 
 export const {
   handlers: { GET, POST },
@@ -35,14 +31,15 @@ export const {
           return null
         }
 
-        const user = await prisma.user.findUnique({
+        // We cast to any here to bypass stale IDE type checking for newer schema fields
+        const user = (await prisma.user.findUnique({
           where: {
             email: credentials.email as string,
           },
-        })
+        })) as any
 
         // Account Lockout Logic (STORY-006)
-        if (user?.lockedUntil && user.lockedUntil > new Date()) {
+        if (user?.lockedUntil && new Date(user.lockedUntil) > new Date()) {
           throw new Error(
             'Too many failed attempts. Please try again in 15 minutes.'
           )
@@ -58,7 +55,7 @@ export const {
         )
 
         if (!isPasswordValid) {
-          const newAttempts = user.failedLoginAttempts + 1
+          const newAttempts = (user.failedLoginAttempts || 0) + 1
           const updates: { failedLoginAttempts: number; lockedUntil?: Date } = {
             failedLoginAttempts: newAttempts,
           }
@@ -69,7 +66,7 @@ export const {
 
           await prisma.user.update({
             where: { id: user.id },
-            data: updates,
+            data: updates as any,
           })
 
           return null
@@ -82,7 +79,7 @@ export const {
             data: {
               failedLoginAttempts: 0,
               lockedUntil: null,
-            },
+            } as any,
           })
         }
 

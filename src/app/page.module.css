@@ -20,14 +20,37 @@
   gap: var(--vora-space-6);
 }
 
-.userInfo {
+.dashboardGrid {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--vora-space-3);
-  color: var(--vora-color-text-secondary);
+  gap: var(--vora-space-6);
 }
 
-.userInfo strong {
+.welcomeCard {
+  background: linear-gradient(135deg, var(--vora-color-accent-subtle), #ffffff);
+  border: 1px solid var(--vora-color-accent-primary);
+  text-align: left;
+}
+
+.welcomeCard h1 {
+  margin-bottom: var(--vora-space-2);
   color: var(--vora-color-text-primary);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--vora-space-4);
+}
+
+.statCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vora-space-2);
+}
+
+.statValue {
+  font-size: var(--vora-font-size-display);
+  font-weight: var(--vora-font-weight-bold);
+  color: var(--vora-color-accent-primary);
 }
