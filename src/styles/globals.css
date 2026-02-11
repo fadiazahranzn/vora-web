@@ -194,13 +194,27 @@ body {
   color: var(--vora-color-text-primary);
   background-color: var(--vora-color-bg-primary);
   transition: background-color var(--vora-duration-normal) var(--vora-easing-default),
-              color var(--vora-duration-normal) var(--vora-easing-default);
+    color var(--vora-duration-normal) var(--vora-easing-default);
 }
 
 /* ── Headings ── */
-h1 { font-size: var(--vora-font-size-h1); font-weight: var(--vora-font-weight-bold); line-height: var(--vora-line-height-tight); }
-h2 { font-size: var(--vora-font-size-h2); font-weight: var(--vora-font-weight-semibold); line-height: var(--vora-line-height-tight); }
-h3 { font-size: var(--vora-font-size-h3); font-weight: var(--vora-font-weight-semibold); line-height: var(--vora-line-height-normal); }
+h1 {
+  font-size: var(--vora-font-size-h1);
+  font-weight: var(--vora-font-weight-bold);
+  line-height: var(--vora-line-height-tight);
+}
+
+h2 {
+  font-size: var(--vora-font-size-h2);
+  font-weight: var(--vora-font-weight-semibold);
+  line-height: var(--vora-line-height-tight);
+}
+
+h3 {
+  font-size: var(--vora-font-size-h3);
+  font-weight: var(--vora-font-weight-semibold);
+  line-height: var(--vora-line-height-normal);
+}
 
 /* ── Focus visible ── */
 :focus-visible {
@@ -211,6 +225,7 @@ h3 { font-size: var(--vora-font-size-h3); font-weight: var(--vora-font-weight-se
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -242,42 +257,99 @@ h3 { font-size: var(--vora-font-size-h3); font-weight: var(--vora-font-weight-se
   background: var(--vora-color-accent-primary);
   color: var(--vora-color-text-inverse);
 }
-.vora-btn--primary:hover { background: var(--vora-color-accent-hover); }
-.vora-btn--primary:active { background: var(--vora-color-accent-pressed); transform: scale(0.98); }
 
-.vora-btn--secondary {
+.vora-btn--primary:hover {
+  background: var(--vora-color-accent-hover);
+}
+
+.vora-btn--primary:active {
+  background: var(--vora-color-accent-pressed);
+  transform: scale(0.98);
+}
+
+.vora-btn--secondary,
+.vora-btn--outline {
   background: transparent;
   color: var(--vora-color-accent-primary);
   border: 1px solid var(--vora-color-accent-primary);
+}
+
+.vora-btn--secondary:hover,
+.vora-btn--outline:hover {
+  background: var(--vora-color-accent-subtle);
 }
 
 .vora-btn--ghost {
   background: transparent;
   color: var(--vora-color-text-primary);
 }
-.vora-btn--ghost:hover { background: var(--vora-color-bg-tertiary); }
+
+.vora-btn--ghost:hover {
+  background: var(--vora-color-bg-tertiary);
+}
 
 .vora-btn--danger {
   background: var(--vora-color-error);
   color: #FFFFFF;
 }
 
-/* Sizes */
-.vora-btn--sm  { height: 36px; padding: 0 12px; font-size: 12px; border-radius: var(--vora-radius-sm); }
-.vora-btn--md  { height: 44px; padding: 0 16px; font-size: 14px; border-radius: var(--vora-radius-md); }
-.vora-btn--lg  { height: 52px; padding: 0 24px; font-size: 16px; border-radius: var(--vora-radius-md); }
-.vora-btn--full { height: 52px; padding: 0 24px; font-size: 16px; border-radius: var(--vora-radius-md); width: 100%; }
+.vora-btn__icon-left {
+  margin-right: 4px;
+}
 
-.vora-btn:disabled { opacity: 0.5; pointer-events: none; }
+.vora-btn__icon-right {
+  margin-left: 4px;
+}
+
+/* Sizes */
+.vora-btn--sm {
+  height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+  border-radius: var(--vora-radius-sm);
+}
+
+.vora-btn--md {
+  height: 44px;
+  padding: 0 16px;
+  font-size: 14px;
+  border-radius: var(--vora-radius-md);
+}
+
+.vora-btn--lg {
+  height: 52px;
+  padding: 0 24px;
+  font-size: 16px;
+  border-radius: var(--vora-radius-md);
+}
+
+.vora-btn--full {
+  height: 52px;
+  padding: 0 24px;
+  font-size: 16px;
+  border-radius: var(--vora-radius-md);
+  width: 100%;
+}
+
+.vora-btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 
 .vora-btn__spinner {
-  width: 20px; height: 20px;
+  width: 20px;
+  height: 20px;
   border: 2px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
   animation: vora-spin 600ms linear infinite;
 }
-@keyframes vora-spin { to { transform: rotate(360deg); } }
+
+@keyframes vora-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 /* ── Input ── */
 .vora-input {
@@ -360,7 +432,35 @@ h3 { font-size: var(--vora-font-size-h3); font-weight: var(--vora-font-weight-se
 .vora-card--interactive {
   cursor: pointer;
 }
+
 .vora-card--interactive:hover {
   box-shadow: var(--vora-shadow-md);
   transform: translateY(-2px);
 }
+/*  Forms  */
+.vora-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vora-space-2);
+  width: 100%;
+}
+
+.vora-label {
+  font-size: var(--vora-font-size-caption);
+  font-weight: var(--vora-font-weight-semibold);
+  color: var(--vora-color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/*  Utilities  */
+.vora-flex-row { display: flex; flex-direction: row; }
+.vora-flex-col { display: flex; flex-direction: column; }
+.vora-items-center { align-items: center; }
+.vora-justify-between { justify-content: space-between; }
+.vora-gap-2 { gap: var(--vora-space-2); }
+.vora-gap-4 { gap: var(--vora-space-4); }
+.vora-gap-6 { gap: var(--vora-space-6); }
+.vora-w-full { width: 100%; }
+.vora-text-tertiary { color: var(--vora-color-text-tertiary); }
+

@@ -1,10 +1,11 @@
 import React from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline'
   size?: 'sm' | 'md' | 'lg' | 'full'
   isLoading?: boolean
   leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
   fullWidth?: boolean
 }
 
@@ -13,6 +14,7 @@ export function Button({
   size = 'md',
   isLoading = false,
   leftIcon,
+  rightIcon,
   children,
   disabled,
   className = '',
@@ -35,8 +37,17 @@ export function Button({
         <span className="vora-btn__spinner" aria-label="Loading" />
       ) : (
         <>
-          {leftIcon && <span className="vora-btn__icon">{leftIcon}</span>}
+          {leftIcon && (
+            <span className="vora-btn__icon vora-btn__icon-left">
+              {leftIcon}
+            </span>
+          )}
           {children}
+          {rightIcon && (
+            <span className="vora-btn__icon vora-btn__icon-right">
+              {rightIcon}
+            </span>
+          )}
         </>
       )}
     </button>

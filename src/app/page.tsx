@@ -31,10 +31,13 @@ interface Habit {
   category: Category
 }
 
+import { HabitWizard } from '@/components/habit/HabitWizard'
+
 export default function Home() {
   const { data: session, status } = useSession()
   const queryClient = useQueryClient()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [isWizardOpen, setIsWizardOpen] = useState(false)
 
   // Greeting based on time of day
   const greeting = useMemo(() => {
@@ -176,7 +179,7 @@ export default function Home() {
               title="No habits scheduled"
               description="It looks like you have nothing planned for this date. Time to start a new habit?"
               actionLabel="Create First Habit"
-              onAction={() => console.log('Open Wizard')}
+              onAction={() => setIsWizardOpen(true)}
               mascotExpression="sleeping"
             />
           ) : (
@@ -204,7 +207,12 @@ export default function Home() {
         </section>
 
         {/* FAB for creation */}
-        <FAB onClick={() => console.log('Open Wizard')} />
+        <FAB onClick={() => setIsWizardOpen(true)} />
+
+        <HabitWizard
+          isOpen={isWizardOpen}
+          onClose={() => setIsWizardOpen(false)}
+        />
       </div>
 
       <style jsx global>{`
