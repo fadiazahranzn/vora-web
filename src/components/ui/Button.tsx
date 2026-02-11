@@ -5,6 +5,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg' | 'full'
   isLoading?: boolean
   leftIcon?: React.ReactNode
+  fullWidth?: boolean
 }
 
 export function Button({
@@ -15,11 +16,13 @@ export function Button({
   children,
   disabled,
   className = '',
+  fullWidth = false,
   ...props
 }: ButtonProps) {
   const baseClass = 'vora-btn'
   const variantClass = `vora-btn--${variant}`
-  const sizeClass = size === 'full' ? 'vora-btn--full' : `vora-btn--${size}`
+  const sizeClass =
+    size === 'full' || fullWidth ? 'vora-btn--full' : `vora-btn--${size}`
   const loadingClass = isLoading ? 'vora-btn--loading' : ''
 
   return (

@@ -1,15 +1,18 @@
 'use client'
 
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
-import { Layers } from 'lucide-react'
+import { Layers, Plus, Settings2 } from 'lucide-react'
+import { CategoryModal } from './CategoryModal'
 
 interface Category {
   id: string
   name: string
   icon: string
   defaultColor: string
+  isDefault: boolean
   habitCount: number
 }
 
@@ -23,6 +26,9 @@ export default function CategorySidebar({
   const pathname = usePathname()
   const activeCategoryId = searchParams.get('category') || 'all'
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+
   const { data: categories, isLoading } = useQuery<Category[]>({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -32,7 +38,10 @@ export default function CategorySidebar({
     },
   })
 
-  const handleCategorySelect = (id: string) => {
+  const handleCategorySelect = (id: string, e: React.MouseEvent) => {
+    // Prevent selection if clicking edit button
+    if ((e.target as HTMLElement).closest('.vora-category-edit-btn')) return
+
     const params = new URLSearchParams(searchParams.toString())
     if (id === 'all') {
       params.delete('category')
@@ -43,15 +52,32 @@ export default function CategorySidebar({
     if (onSelectAction) onSelectAction()
   }
 
+  const handleAddCategory = () => {
+    setEditingCategory(null)
+    setIsModalOpen(true)
+  }
+
+  const handleEditCategory = (category: Category) => {
+    setEditingCategory(category)
+    setIsModalOpen(true)
+  }
+
   return (
     <div className="vora-sidebar-content">
       <div className="vora-sidebar-header">
         <h2 className="vora-sidebar-title">Categories</h2>
+        <button
+          className="vora-add-category-btn"
+          onClick={handleAddCategory}
+          aria-label="Add category"
+        >
+          <Plus size={18} />
+        </button>
       </div>
 
       <nav className="vora-sidebar-nav">
         <button
-          onClick={() => handleCategorySelect('all')}
+          onClick={(e) => handleCategorySelect('all', e)}
           className={clsx(
             'vora-sidebar-item',
             activeCategoryId === 'all' && 'vora-sidebar-item--active'
@@ -73,23 +99,40 @@ export default function CategorySidebar({
           categories?.map((category) => (
             <button
               key={category.id}
-              onClick={() => handleCategorySelect(category.id)}
+              onClick={(e) => handleCategorySelect(category.id, e)}
               className={clsx(
                 'vora-sidebar-item',
+                'vora-sidebar-item--has-actions',
                 activeCategoryId === category.id && 'vora-sidebar-item--active'
               )}
             >
               <span className="vora-sidebar-item-icon">{category.icon}</span>
               <span className="vora-sidebar-item-name">{category.name}</span>
-              {category.habitCount > 0 && (
-                <span className="vora-sidebar-item-count">
-                  {category.habitCount}
-                </span>
-              )}
+
+              <div className="vora-category-actions">
+                <button
+                  className="vora-category-edit-btn"
+                  onClick={() => handleEditCategory(category)}
+                  aria-label={`Edit ${category.name}`}
+                >
+                  <Settings2 size={14} />
+                </button>
+                {category.habitCount > 0 && (
+                  <span className="vora-sidebar-item-count">
+                    {category.habitCount}
+                  </span>
+                )}
+              </div>
             </button>
           ))
         )}
       </nav>
+
+      <CategoryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        category={editingCategory}
+      />
 
       <style jsx>{`
         .vora-sidebar-content {
@@ -101,6 +144,9 @@ export default function CategorySidebar({
 
         .vora-sidebar-header {
           margin-bottom: var(--vora-space-6);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
 
         .vora-sidebar-title {
@@ -133,6 +179,7 @@ export default function CategorySidebar({
           transition: all var(--vora-duration-fast);
           text-align: left;
           width: 100%;
+          position: relative;
         }
 
         .vora-sidebar-item:hover {
@@ -156,6 +203,15 @@ export default function CategorySidebar({
 
         .vora-sidebar-item-name {
           flex: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .vora-category-actions {
+          display: flex;
+          align-items: center;
+          gap: var(--vora-space-2);
         }
 
         .vora-sidebar-item-count {
@@ -165,11 +221,42 @@ export default function CategorySidebar({
           color: var(--vora-color-text-secondary);
           padding: 2px 8px;
           border-radius: var(--vora-radius-full);
+          transition: all var(--vora-duration-fast);
         }
 
         .vora-sidebar-item--active .vora-sidebar-item-count {
           background: var(--vora-color-accent-primary);
           color: var(--vora-color-text-inverse);
+        }
+
+        .vora-add-category-btn,
+        .vora-category-edit-btn {
+          background: transparent;
+          border: none;
+          color: var(--vora-color-text-tertiary);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 4px;
+          border-radius: 4px;
+          transition: all var(--vora-duration-fast);
+        }
+
+        .vora-add-category-btn:hover,
+        .vora-category-edit-btn:hover {
+          background: var(--vora-color-bg-tertiary);
+          color: var(--vora-color-accent-primary);
+        }
+
+        /* Edit button only visible on hover or active */
+        .vora-category-edit-btn {
+          opacity: 0;
+        }
+
+        .vora-sidebar-item:hover .vora-category-edit-btn,
+        .vora-sidebar-item--active .vora-category-edit-btn {
+          opacity: 1;
         }
 
         .vora-sidebar-loading {

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth, handleAuthError } from '@/lib/auth'
+import { createCategorySchema } from '@/lib/validations/category'
+import { z } from 'zod'
 
 /**
  * GET /api/categories
@@ -13,8 +15,6 @@ export async function GET() {
     const categories = await prisma.category.findMany({
       where: {
         userId,
-        // Soft delete is handled by prisma middleware/extension if implemented,
-        // but adding here explicitly if middleware is not fully trusted/ready
         deletedAt: null,
       },
       include: {
@@ -46,6 +46,77 @@ export async function GET() {
 
     return NextResponse.json(formattedCategories)
   } catch (error) {
+    return handleAuthError(error)
+  }
+}
+
+/**
+ * POST /api/categories
+ * Creates a new category for the authenticated user.
+ */
+export async function POST(req: Request) {
+  try {
+    const { userId } = await requireAuth()
+    const body = await req.json()
+
+    // 1. Validate Input
+    const validatedData = createCategorySchema.parse(body)
+
+    // 2. Enforce 20-category limit
+    const count = await prisma.category.count({
+      where: { userId, deletedAt: null },
+    })
+
+    if (count >= 20) {
+      return NextResponse.json(
+        {
+          error:
+            'Maximum 20 categories reached. Delete a category to create a new one.',
+        },
+        { status: 422 }
+      )
+    }
+
+    // 3. Check for uniqueness (case-insensitive)
+    const existing = await prisma.category.findFirst({
+      where: {
+        userId,
+        name: { equals: validatedData.name, mode: 'insensitive' },
+        deletedAt: null,
+      },
+    })
+
+    if (existing) {
+      return NextResponse.json(
+        { error: 'A category with this name already exists' },
+        { status: 409 }
+      )
+    }
+
+    // 4. Determine sort_order (max + 1)
+    const lastCategory = await prisma.category.findFirst({
+      where: { userId, deletedAt: null },
+      orderBy: { sortOrder: 'desc' },
+    })
+    const sortOrder = lastCategory ? lastCategory.sortOrder + 1 : 0
+
+    // 5. Create Category
+    const category = await prisma.category.create({
+      data: {
+        ...validatedData,
+        userId,
+        sortOrder,
+      },
+    })
+
+    return NextResponse.json(category, { status: 201 })
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: error.issues[0].message },
+        { status: 400 }
+      )
+    }
     return handleAuthError(error)
   }
 }
