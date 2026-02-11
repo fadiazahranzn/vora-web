@@ -1,56 +1,224 @@
 'use client'
 
+import React, { useState, useMemo } from 'react'
 import { useSession } from 'next-auth/react'
-import { Card } from '@/components/ui/Card'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
+import { Mascot } from '@/components/ui/Mascot'
+import { ProgressBar } from '@/components/ui/ProgressBar'
+import { FAB } from '@/components/ui/FAB'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { DateNav } from '@/components/ui/DateNav'
+import { HabitCard } from '@/components/habit/HabitCard'
+import DashboardLayout from '@/components/layout/DashboardLayout'
 import styles from './page.module.css'
 
-import DashboardLayout from '@/components/layout/DashboardLayout'
+interface Category {
+  id: string
+  name: string
+  icon: string
+  sortOrder: number
+}
+
+interface Habit {
+  id: string
+  name: string
+  color: string
+  isCompleted: boolean
+  streakCount?: number
+  categoryId: string
+  category: Category
+}
 
 export default function Home() {
   const { data: session, status } = useSession()
+  const queryClient = useQueryClient()
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
 
-  if (status === 'loading') {
-    return (
-      <div className={styles.container}>
-        <p>Loading...</p>
-      </div>
-    )
-  }
+  // Greeting based on time of day
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours()
+    if (hour < 12) return 'Good morning'
+    if (hour < 17) return 'Good afternoon'
+    return 'Good evening'
+  }, [])
 
-  if (!session) {
-    return (
-      <div className={styles.container}>
-        <Card className={styles.card}>
-          <p>You are not signed in. Redirecting...</p>
-        </Card>
-      </div>
+  const formattedDate = format(selectedDate, 'yyyy-MM-dd')
+
+  const { data: habits = [], isLoading } = useQuery<Habit[]>({
+    queryKey: ['habits', formattedDate],
+    queryFn: async () => {
+      const res = await fetch(`/api/habits?date=${formattedDate}`)
+      if (!res.ok) throw new Error('Failed to fetch habits')
+      return res.json()
+    },
+    enabled: !!session,
+  })
+
+  // Completion Mutation
+  const toggleMutation = useMutation({
+    mutationFn: async ({
+      id,
+      completed,
+    }: {
+      id: string
+      completed: boolean
+    }) => {
+      const method = completed ? 'POST' : 'DELETE'
+      const url = `/api/habits/${id}/complete${!completed ? `?date=${formattedDate}` : ''}`
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: completed ? JSON.stringify({ date: formattedDate }) : undefined,
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Failed to update habit')
+      }
+      return res.json()
+    },
+    onMutate: async ({ id, completed }) => {
+      await queryClient.cancelQueries({ queryKey: ['habits', formattedDate] })
+      const previousHabits = queryClient.getQueryData(['habits', formattedDate])
+
+      if (previousHabits) {
+        const newHabits = (previousHabits as Habit[]).map((h) =>
+          h.id === id ? { ...h, isCompleted: completed } : h
+        )
+        queryClient.setQueryData(['habits', formattedDate], newHabits)
+      }
+
+      return { previousHabits }
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousHabits) {
+        queryClient.setQueryData(
+          ['habits', formattedDate],
+          context.previousHabits
+        )
+      }
+      console.error('Toggle failed:', err)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
+    },
+  })
+
+  // Group habits by category
+  const groupedHabits = useMemo(() => {
+    const groups: Record<string, { category: Category; items: Habit[] }> = {}
+
+    habits.forEach((habit) => {
+      const catId = habit.categoryId
+      if (!groups[catId]) {
+        groups[catId] = { category: habit.category, items: [] }
+      }
+      groups[catId].items.push(habit)
+    })
+
+    return Object.values(groups).sort(
+      (a, b) => a.category.sortOrder - b.category.sortOrder
     )
+  }, [habits])
+
+  const completionRate = useMemo(() => {
+    if (habits.length === 0) return 0
+    const completed = habits.filter((h) => h.isCompleted).length
+    return (completed / habits.length) * 100
+  }, [habits])
+
+  if (status === 'unauthenticated') {
+    return null // Handled by middleware or root layout redirect
   }
 
   return (
     <DashboardLayout>
-      <div className={styles.dashboardGrid}>
-        <Card className={styles.welcomeCard}>
-          <h1>Dashboard Overview</h1>
-          <p>
-            Welcome back,{' '}
-            <strong>{session.user?.name || session.user?.email}</strong>!
-          </p>
-          <p>This is where your habit tracking journey continues.</p>
-        </Card>
+      <div className={styles.container}>
+        {/* Header Section */}
+        <section className={styles.welcomeSection}>
+          <div className={styles.welcomeText}>
+            <h1>
+              {greeting}, {session?.user?.name || 'Voran'}! ✨
+            </h1>
+            <p>Ready to crush your goals today?</p>
+            <div className={styles.progressSection}>
+              <ProgressBar progress={completionRate} label="Today's Progress" />
+            </div>
+          </div>
+          <Mascot
+            size={100}
+            expression={
+              completionRate === 100
+                ? 'happy'
+                : completionRate > 50
+                  ? 'motivated'
+                  : 'neutral'
+            }
+          />
+        </section>
 
-        {/* Placeholder for future Habit Cards */}
-        <div className={styles.statsGrid}>
-          <Card className={styles.statCard}>
-            <h3>Total Habits</h3>
-            <p className={styles.statValue}>12</p>
-          </Card>
-          <Card className={styles.statCard}>
-            <h3>Daily Streak</h3>
-            <p className={styles.statValue}>5 Days</p>
-          </Card>
-        </div>
+        {/* Date Navigation */}
+        <DateNav selectedDate={selectedDate} onDateChange={setSelectedDate} />
+
+        {/* Habits List */}
+        <section className={styles.habitSection}>
+          {isLoading ? (
+            <div className={styles.loadingGrid}>
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className={styles.skeletonCard} />
+              ))}
+            </div>
+          ) : habits.length === 0 ? (
+            <EmptyState
+              title="No habits scheduled"
+              description="It looks like you have nothing planned for this date. Time to start a new habit?"
+              actionLabel="Create First Habit"
+              onAction={() => console.log('Open Wizard')}
+              mascotExpression="sleeping"
+            />
+          ) : (
+            groupedHabits.map((group) => (
+              <div key={group.category.id} className={styles.categoryGroup}>
+                <div className={styles.categoryHeader}>
+                  <span>{group.category.icon}</span>
+                  <h3>{group.category.name}</h3>
+                </div>
+                <div className={styles.habitGrid}>
+                  {group.items.map((habit) => (
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      onToggle={(id, completed) =>
+                        toggleMutation.mutate({ id, completed })
+                      }
+                      onDetails={(id) => console.log('Go to details:', id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </section>
+
+        {/* FAB for creation */}
+        <FAB onClick={() => console.log('Open Wizard')} />
       </div>
+
+      <style jsx global>{`
+        /* Global bounce animation for icons if needed */
+        @keyframes vora-bounce {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+      `}</style>
     </DashboardLayout>
   )
 }

@@ -1,0 +1,132 @@
+.cardWrapper {
+    position: relative;
+    transition: transform var(--vora-duration-fast) var(--vora-easing-default);
+}
+
+.cardWrapper:active {
+    transform: scale(0.98);
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: var(--vora-space-4);
+    padding: var(--vora-space-4);
+    background: var(--vora-color-bg-primary);
+    border-radius: var(--vora-radius-lg);
+    border: 1px solid var(--vora-color-border-default);
+    box-shadow: var(--vora-shadow-sm);
+    cursor: pointer;
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--vora-shadow-md);
+    border-color: var(--vora-color-accent-subtle);
+}
+
+.cardCompleted {
+    background: var(--vora-color-bg-tertiary);
+    opacity: 0.8;
+}
+
+.accentBorder {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+}
+
+.checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--vora-radius-sm);
+    border: 2px solid var(--vora-color-border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--vora-duration-fast) var(--vora-easing-bounce);
+    color: transparent;
+    flex-shrink: 0;
+    background: var(--vora-color-bg-primary);
+}
+
+.checkboxChecked {
+    background: var(--vora-color-accent-primary);
+    border-color: var(--vora-color-accent-primary);
+    color: var(--vora-color-text-inverse);
+    transform: scale(1.1);
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.title {
+    font-weight: var(--vora-font-weight-semibold);
+    font-size: var(--vora-font-size-body);
+    color: var(--vora-color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.titleCompleted {
+    text-decoration: line-through;
+    color: var(--vora-color-text-tertiary);
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    gap: var(--vora-space-3);
+    font-size: var(--vora-font-size-caption);
+    color: var(--vora-color-text-tertiary);
+}
+
+.category {
+    display: flex;
+    align-items: center;
+    gap: var(--vora-space-1);
+}
+
+.streak {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #F59E0B;
+    /* Amber/Flame color */
+    font-weight: var(--vora-font-weight-bold);
+}
+
+.bounce {
+    animation: bounce 0.3s var(--vora-easing-bounce);
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.stamp {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    opacity: 0.1;
+    transform: rotate(-15deg);
+    pointer-events: none;
+}
