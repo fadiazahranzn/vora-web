@@ -61,9 +61,9 @@ THEN only non-deleted habits are counted
 - **External Dependencies:** None
 
 ## Definition of Done
-- [ ] Soft-delete middleware intercepts delete operations on specified models
-- [ ] Queries automatically exclude soft-deleted records
-- [ ] Explicit filter for soft-deleted records works
-- [ ] Models without `deletedAt` field behave normally
-- [ ] Unit tests covering all soft-delete scenarios passing
-- [ ] Code merged to main branch
+- [x] Soft-delete middleware intercepts delete operations on specified models
+- [x] Queries automatically exclude soft-deleted records
+- [x] Explicit filter for soft-deleted records works
+- [x] Models without `deletedAt` field behave normally
+- [x] Unit tests covering all soft-delete scenarios passing
+- [x] Code merged to main branch
