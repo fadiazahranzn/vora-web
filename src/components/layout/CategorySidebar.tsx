@@ -37,81 +37,6 @@ interface Category {
   habitCount: number
 }
 
-interface SortableItemProps {
-  category: Category
-  activeCategoryId: string
-  onSelect: (id: string, e: React.MouseEvent) => void
-  onEdit: (category: Category) => void
-}
-
-function SortableCategoryItem({
-  category,
-  activeCategoryId,
-  onSelect,
-  onEdit,
-}: SortableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: category.id })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 1 : 0,
-    opacity: isDragging ? 0.5 : 1,
-  }
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={clsx(
-        'vora-sidebar-item-wrapper',
-        isDragging && 'vora-sidebar-item-wrapper--dragging'
-      )}
-    >
-      <button
-        onClick={(e) => onSelect(category.id, e)}
-        className={clsx(
-          'vora-sidebar-item',
-          'vora-sidebar-item--has-actions',
-          activeCategoryId === category.id && 'vora-sidebar-item--active'
-        )}
-      >
-        <div
-          className="vora-sidebar-item-drag-handle"
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical size={14} />
-        </div>
-        <span className="vora-sidebar-item-icon">{category.icon}</span>
-        <span className="vora-sidebar-item-name">{category.name}</span>
-
-        <div className="vora-category-actions">
-          <button
-            className="vora-category-edit-btn"
-            onClick={() => onEdit(category)}
-            aria-label={`Edit ${category.name}`}
-          >
-            <Settings2 size={14} />
-          </button>
-          {category.habitCount > 0 && (
-            <span className="vora-sidebar-item-count">
-              {category.habitCount}
-            </span>
-          )}
-        </div>
-      </button>
-    </div>
-  )
-}
-
 export default function CategorySidebar({
   onSelectAction,
 }: {
@@ -126,7 +51,87 @@ export default function CategorySidebar({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
 
+  interface SortableItemProps {
+    category: Category
+    activeCategoryId: string
+    onSelect: (id: string, e: React.MouseEvent) => void
+    onEdit: (category: Category) => void
+  }
+
+  // Inner component for style scoping
+  function SortableCategoryItem({
+    category,
+    activeCategoryId,
+    onSelect,
+    onEdit,
+  }: SortableItemProps) {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: category.id })
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      zIndex: isDragging ? 10 : 0,
+    }
+
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={clsx(
+          'vora-sidebar-item-wrapper',
+          isDragging && 'vora-sidebar-item-wrapper--dragging'
+        )}
+      >
+        <div
+          className={clsx(
+            'vora-sidebar-item',
+            activeCategoryId === category.id && 'vora-sidebar-item--active'
+          )}
+        >
+          <div
+            className="vora-sidebar-item-drag-handle"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical size={14} />
+          </div>
+
+          <div
+            className="vora-sidebar-item-click-area"
+            onClick={(e) => onSelect(category.id, e)}
+          >
+            <span className="vora-sidebar-item-icon">{category.icon}</span>
+            <span className="vora-sidebar-item-name">{category.name}</span>
+          </div>
+
+          <div className="vora-category-actions">
+            <button
+              className="vora-category-edit-btn"
+              onClick={() => onEdit(category)}
+              aria-label={`Edit ${category.name}`}
+            >
+              <Settings2 size={14} />
+            </button>
+            {category.habitCount > 0 && (
+              <span className="vora-sidebar-item-count">
+                {category.habitCount}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   const { data: categories = [], isLoading } = useQuery<Category[]>({
+    // ... (rest of query and mutation logic)
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await fetch('/api/categories')
@@ -138,7 +143,7 @@ export default function CategorySidebar({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px movement before drag starts
+        distance: 8,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -160,12 +165,9 @@ export default function CategorySidebar({
       await queryClient.cancelQueries({ queryKey: ['categories'] })
       const previousCategories = queryClient.getQueryData(['categories'])
 
-      // Optimistically update the cache
       if (previousCategories) {
         const newCategories = [...(previousCategories as Category[])].sort(
-          (a, b) => {
-            return orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id)
-          }
+          (a, b) => orderedIds.indexOf(a.id) - orderedIds.indexOf(b.id)
         )
         queryClient.setQueryData(['categories'], newCategories)
       }
@@ -176,7 +178,6 @@ export default function CategorySidebar({
       if (context?.previousCategories) {
         queryClient.setQueryData(['categories'], context.previousCategories)
       }
-      // In a real app, show a toast here
       console.error('Reorder failed:', err)
     },
     onSettled: () => {
@@ -186,11 +187,9 @@ export default function CategorySidebar({
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
-
     if (over && active.id !== over.id) {
       const oldIndex = categories.findIndex((c) => c.id === active.id)
       const newIndex = categories.findIndex((c) => c.id === over.id)
-
       const newCategories = arrayMove(categories, oldIndex, newIndex)
       reorderMutation.mutate(newCategories.map((c) => c.id))
     }
@@ -198,10 +197,7 @@ export default function CategorySidebar({
 
   const categoryIds = useMemo(() => categories.map((c) => c.id), [categories])
 
-  const handleCategorySelect = (id: string, e: React.MouseEvent) => {
-    // Prevent selection if clicking edit button
-    if ((e.target as HTMLElement).closest('.vora-category-edit-btn')) return
-
+  const handleCategorySelect = (id: string, _e: React.MouseEvent) => {
     const params = new URLSearchParams(searchParams.toString())
     if (id === 'all') {
       params.delete('category')
@@ -320,19 +316,10 @@ export default function CategorySidebar({
           align-items: center;
           gap: var(--vora-space-3);
           padding: var(--vora-space-3);
-          border: none;
           background: transparent;
           border-radius: var(--vora-radius-md);
           color: var(--vora-color-text-secondary);
-          font-family: inherit;
-          font-size: var(--vora-font-size-body);
-          font-weight: var(--vora-font-weight-medium);
-          cursor: pointer;
-          transition:
-            background var(--vora-duration-fast),
-            color var(--vora-duration-fast);
-          text-align: left;
-          width: 100%;
+          transition: all var(--vora-duration-fast);
           position: relative;
         }
 
@@ -344,6 +331,26 @@ export default function CategorySidebar({
         .vora-sidebar-item--active {
           background: var(--vora-color-accent-subtle);
           color: var(--vora-color-accent-primary);
+        }
+
+        /* All habits item (direct button) */
+        button.vora-sidebar-item {
+          border: none;
+          font-family: inherit;
+          font-size: var(--vora-font-size-body);
+          font-weight: var(--vora-font-weight-medium);
+          cursor: pointer;
+          width: 100%;
+          text-align: left;
+        }
+
+        .vora-sidebar-item-click-area {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: var(--vora-space-3);
+          cursor: pointer;
+          overflow: hidden;
         }
 
         .vora-sidebar-item-drag-handle {
@@ -371,9 +378,9 @@ export default function CategorySidebar({
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 24px;
-          height: 24px;
-          font-size: 18px;
+          width: 20px;
+          height: 20px;
+          font-size: 16px;
         }
 
         .vora-sidebar-item-name {
@@ -381,6 +388,8 @@ export default function CategorySidebar({
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          font-weight: var(--vora-font-weight-medium);
+          font-size: var(--vora-font-size-body);
         }
 
         .vora-category-actions {
@@ -396,7 +405,6 @@ export default function CategorySidebar({
           color: var(--vora-color-text-secondary);
           padding: 2px 8px;
           border-radius: var(--vora-radius-full);
-          transition: all var(--vora-duration-fast);
         }
 
         .vora-sidebar-item--active .vora-sidebar-item-count {
@@ -424,7 +432,6 @@ export default function CategorySidebar({
           color: var(--vora-color-accent-primary);
         }
 
-        /* Edit button only visible on hover or active */
         .vora-category-edit-btn {
           opacity: 0;
         }
@@ -457,6 +464,10 @@ export default function CategorySidebar({
           100% {
             opacity: 0.6;
           }
+        }
+
+        .vora-sidebar-item-wrapper--dragging {
+          z-index: 100;
         }
       `}</style>
     </div>
