@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
@@ -37,23 +37,30 @@ interface Habit {
 export default function Home() {
   const { data: session, status } = useSession()
   const queryClient = useQueryClient()
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [mounted, setMounted] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [isWizardOpen, setIsWizardOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [editingHabitId, setEditingHabitId] = useState<string | null>(null)
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false)
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null)
 
+  useEffect(() => {
+    setMounted(true)
+    setSelectedDate(new Date())
+  }, [])
+
   // Greeting based on time of day
   const greeting = useMemo(() => {
-    const hour = new Date().getHours()
+    if (!mounted) return ''
+    const hour = (selectedDate || new Date()).getHours()
     if (hour < 12) return 'Good morning'
     if (hour < 17) return 'Good afternoon'
     return 'Good evening'
-  }, [])
+  }, [mounted, selectedDate])
 
-  const formattedDate = format(selectedDate, 'yyyy-MM-dd')
-  const formattedMonth = format(selectedDate, 'yyyy-MM')
+  const formattedDate = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''
+  const formattedMonth = selectedDate ? format(selectedDate, 'yyyy-MM') : ''
 
   const { data: habits = [], isLoading } = useQuery<Habit[]>({
     queryKey: ['habits', formattedDate],
@@ -62,7 +69,7 @@ export default function Home() {
       if (!res.ok) throw new Error('Failed to fetch habits')
       return res.json()
     },
-    enabled: !!session,
+    enabled: !!session && !!selectedDate,
   })
 
   // Fetch completion dates for calendar dots
@@ -73,7 +80,7 @@ export default function Home() {
       if (!res.ok) throw new Error('Failed to fetch completion dates')
       return res.json()
     },
-    enabled: !!session,
+    enabled: !!session && !!selectedDate,
   })
 
   // Completion Mutation
@@ -226,11 +233,16 @@ export default function Home() {
         </section>
 
         {/* Date Navigation */}
-        <DatePicker
-          selectedDate={selectedDate}
-          onDateChange={setSelectedDate}
-          completionDates={completionData?.dates || []}
-        />
+        {/* Date Navigation */}
+        {mounted && selectedDate ? (
+          <DatePicker
+            selectedDate={selectedDate}
+            onDateChange={(date) => setSelectedDate(date)}
+            completionDates={completionData?.dates || []}
+          />
+        ) : (
+          <div style={{ height: '56px', marginBottom: '24px' }} />
+        )}
 
         {/* Habits List */}
         <section className={styles.habitSection}>
