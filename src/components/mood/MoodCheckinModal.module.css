@@ -1,0 +1,83 @@
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-6);
+    padding: var(--vora-space-4) 0;
+    align-items: center;
+    text-align: center;
+}
+
+.title {
+    font-size: var(--vora-font-size-h2);
+    font-weight: var(--vora-font-weight-bold);
+    color: var(--vora-color-text-primary);
+}
+
+.subtitle {
+    font-size: var(--vora-font-size-body);
+    color: var(--vora-color-text-secondary);
+    max-width: 250px;
+}
+
+.moodGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--vora-space-4);
+    width: 100%;
+}
+
+.moodItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--vora-space-2);
+    padding: var(--vora-space-4);
+    background: var(--vora-color-bg-secondary);
+    border: 2px solid transparent;
+    border-radius: var(--vora-radius-lg);
+    cursor: pointer;
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+}
+
+.moodItem:hover {
+    transform: translateY(-4px);
+    background: var(--vora-color-bg-tertiary);
+}
+
+.moodItemActive {
+    border-color: var(--vora-color-accent-primary);
+    background: var(--vora-color-accent-subtle);
+    transform: scale(1.05);
+}
+
+.emoji {
+    font-size: 32px;
+}
+
+.moodLabel {
+    font-size: var(--vora-font-size-caption);
+    font-weight: var(--vora-font-weight-bold);
+    color: var(--vora-color-text-primary);
+    text-transform: capitalize;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    gap: var(--vora-space-4);
+    width: 100%;
+    margin-top: var(--vora-space-4);
+}
+
+.skipBtn {
+    font-size: var(--vora-font-size-caption);
+    color: var(--vora-color-text-tertiary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.skipBtn:hover {
+    color: var(--vora-color-text-secondary);
+}

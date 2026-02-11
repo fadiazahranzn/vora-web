@@ -11,6 +11,8 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { DateNav } from '@/components/ui/DateNav'
 import { HabitCard } from '@/components/habit/HabitCard'
+import { HabitWizard } from '@/components/habit/HabitWizard'
+import { MoodCheckinModal, MoodType } from '@/components/mood/MoodCheckinModal'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import styles from './page.module.css'
 
@@ -31,13 +33,13 @@ interface Habit {
   category: Category
 }
 
-import { HabitWizard } from '@/components/habit/HabitWizard'
-
 export default function Home() {
   const { data: session, status } = useSession()
   const queryClient = useQueryClient()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [isWizardOpen, setIsWizardOpen] = useState(false)
+  const [isMoodModalOpen, setIsMoodModalOpen] = useState(false)
+  const [activeHabitId, setActiveHabitId] = useState<string | null>(null)
 
   // Greeting based on time of day
   const greeting = useMemo(() => {
@@ -109,6 +111,51 @@ export default function Home() {
       queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
     },
   })
+
+  // Mood Mutation
+  const moodMutation = useMutation({
+    mutationFn: async ({ id, mood }: { id: string; mood: MoodType }) => {
+      const res = await fetch('/api/mood-checkins', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          habitId: id,
+          date: formattedDate,
+          mood,
+        }),
+      })
+      if (!res.ok) throw new Error('Failed to save mood')
+      return res.json()
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
+    },
+  })
+
+  const handleToggle = (id: string, completed: boolean) => {
+    if (completed) {
+      // Mark as complete and open mood modal after delay
+      toggleMutation.mutate({ id, completed })
+      setActiveHabitId(id)
+      setTimeout(() => setIsMoodModalOpen(true), 500)
+    } else {
+      // Just mark as incomplete
+      toggleMutation.mutate({ id, completed })
+    }
+  }
+
+  const handleMoodSelect = (mood: MoodType) => {
+    if (activeHabitId) {
+      moodMutation.mutate({ id: activeHabitId, mood })
+    }
+    setIsMoodModalOpen(false)
+    setActiveHabitId(null)
+  }
+
+  const handleMoodSkip = () => {
+    setIsMoodModalOpen(false)
+    setActiveHabitId(null)
+  }
 
   // Group habits by category
   const groupedHabits = useMemo(() => {
@@ -194,9 +241,7 @@ export default function Home() {
                     <HabitCard
                       key={habit.id}
                       habit={habit}
-                      onToggle={(id, completed) =>
-                        toggleMutation.mutate({ id, completed })
-                      }
+                      onToggle={handleToggle}
                       onDetails={(id) => console.log('Go to details:', id)}
                     />
                   ))}
@@ -212,6 +257,13 @@ export default function Home() {
         <HabitWizard
           isOpen={isWizardOpen}
           onClose={() => setIsWizardOpen(false)}
+        />
+
+        <MoodCheckinModal
+          isOpen={isMoodModalOpen}
+          onClose={handleMoodSkip}
+          onSelect={handleMoodSelect}
+          onSkip={handleMoodSkip}
         />
       </div>
 

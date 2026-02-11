@@ -33,16 +33,22 @@ export const HabitCard: React.FC<HabitCardProps> = ({
     if (onToggle) {
       if (!habit.isCompleted) {
         setIsAnimating(true)
-        setTimeout(() => setIsAnimating(false), 300)
+        setTimeout(() => setIsAnimating(false), 400)
       }
       onToggle(habit.id, !habit.isCompleted)
+    }
+  }
+
+  const handleCardClick = () => {
+    if (onDetails) {
+      onDetails(habit.id)
     }
   }
 
   return (
     <div
       className={clsx(styles.cardWrapper, isAnimating && styles.bounce)}
-      onClick={() => onDetails?.(habit.id)}
+      onClick={handleCardClick}
     >
       <div
         className={clsx(styles.card, habit.isCompleted && styles.cardCompleted)}
@@ -81,9 +87,10 @@ export const HabitCard: React.FC<HabitCardProps> = ({
                 <span>{habit.category.name}</span>
               </div>
             )}
-            {/* Streak - Placeholder logic */}
+
+            {/* Streak Badge */}
             {(habit.streakCount ?? 0) > 0 && (
-              <div className={styles.streak}>
+              <div className={styles.streak} title="Current Streak">
                 <Flame size={12} fill="currentColor" />
                 <span>{habit.streakCount}</span>
               </div>
