@@ -3,6 +3,31 @@ import { prisma } from '@/lib/prisma'
 import { requireAuth, handleAuthError } from '@/lib/auth'
 import { updateCategorySchema } from '@/lib/validations/category'
 import { z } from 'zod'
+/**
+ * GET /api/categories/[id]
+ * Returns a specific category for the authenticated user.
+ */
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { userId } = await requireAuth()
+    const { id } = params
+
+    const category = await prisma.category.findFirst({
+      where: { id, userId, deletedAt: null },
+    })
+
+    if (!category) {
+      return NextResponse.json({ error: 'Category not found' }, { status: 404 })
+    }
+
+    return NextResponse.json(category)
+  } catch (error) {
+    return handleAuthError(error)
+  }
+}
 
 /**
  * PATCH /api/categories/[id]
@@ -42,7 +67,7 @@ export async function PATCH(
 
       if (existing) {
         return NextResponse.json(
-          { error: 'A category with this name already exists' },
+          { error: 'Category name already exists' },
           { status: 409 }
         )
       }

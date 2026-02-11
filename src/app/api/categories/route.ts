@@ -69,10 +69,7 @@ export async function POST(req: Request) {
 
     if (count >= 20) {
       return NextResponse.json(
-        {
-          error:
-            'Maximum 20 categories reached. Delete a category to create a new one.',
-        },
+        { error: 'Maximum 20 categories reached' },
         { status: 422 }
       )
     }
@@ -88,7 +85,7 @@ export async function POST(req: Request) {
 
     if (existing) {
       return NextResponse.json(
-        { error: 'A category with this name already exists' },
+        { error: 'Category name already exists' },
         { status: 409 }
       )
     }
