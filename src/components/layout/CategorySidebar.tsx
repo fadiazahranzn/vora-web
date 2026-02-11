@@ -28,6 +28,8 @@ import {
 } from '@dnd-kit/modifiers'
 import { CategoryModal } from './CategoryModal'
 
+import styles from './CategorySidebar.module.css'
+
 interface Category {
   id: string
   name: string
@@ -77,52 +79,47 @@ export default function CategorySidebar({
     const style = {
       transform: CSS.Transform.toString(transform),
       transition,
-      zIndex: isDragging ? 10 : 0,
     }
+
+    const isActive = activeCategoryId === category.id
 
     return (
       <div
         ref={setNodeRef}
         style={style}
-        className={clsx(
-          'vora-sidebar-item-wrapper',
-          isDragging && 'vora-sidebar-item-wrapper--dragging'
-        )}
+        className={clsx(styles.itemWrapper, isDragging && styles.dragging)}
       >
-        <div
-          className={clsx(
-            'vora-sidebar-item',
-            activeCategoryId === category.id && 'vora-sidebar-item--active'
-          )}
-        >
-          <div
-            className="vora-sidebar-item-drag-handle"
-            {...attributes}
-            {...listeners}
-          >
+        <div className={clsx(styles.item, isActive && styles.itemActive)}>
+          <div className={styles.dragHandle} {...attributes} {...listeners}>
             <GripVertical size={14} />
           </div>
 
           <div
-            className="vora-sidebar-item-click-area"
+            className={styles.clickArea}
             onClick={(e) => onSelect(category.id, e)}
           >
-            <span className="vora-sidebar-item-icon">{category.icon}</span>
-            <span className="vora-sidebar-item-name">{category.name}</span>
+            <div
+              className={styles.iconWrapper}
+              style={{
+                backgroundColor: isActive ? category.defaultColor : undefined,
+                color: isActive ? '#fff' : undefined,
+              }}
+            >
+              {category.icon}
+            </div>
+            <span className={styles.name}>{category.name}</span>
           </div>
 
-          <div className="vora-category-actions">
+          <div className={styles.actions}>
             <button
-              className="vora-category-edit-btn"
+              className={styles.editBtn}
               onClick={() => onEdit(category)}
               aria-label={`Edit ${category.name}`}
             >
               <Settings2 size={14} />
             </button>
             {category.habitCount > 0 && (
-              <span className="vora-sidebar-item-count">
-                {category.habitCount}
-              </span>
+              <span className={styles.count}>{category.habitCount}</span>
             )}
           </div>
         </div>
@@ -174,7 +171,7 @@ export default function CategorySidebar({
 
       return { previousCategories }
     },
-    onError: (err, newOrder, context) => {
+    onError: (err, _newOrder, context) => {
       if (context?.previousCategories) {
         queryClient.setQueryData(['categories'], context.previousCategories)
       }
@@ -219,11 +216,11 @@ export default function CategorySidebar({
   }
 
   return (
-    <div className="vora-sidebar-content">
-      <div className="vora-sidebar-header">
-        <h2 className="vora-sidebar-title">Categories</h2>
+    <div className={styles.content}>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Categories</h2>
         <button
-          className="vora-add-category-btn"
+          className={styles.addBtn}
           onClick={handleAddCategory}
           aria-label="Add category"
         >
@@ -231,24 +228,25 @@ export default function CategorySidebar({
         </button>
       </div>
 
-      <nav className="vora-sidebar-nav">
+      <nav className={styles.nav}>
         <button
           onClick={(e) => handleCategorySelect('all', e)}
           className={clsx(
-            'vora-sidebar-item',
-            activeCategoryId === 'all' && 'vora-sidebar-item--active'
+            styles.item,
+            styles.allHabitsBtn,
+            activeCategoryId === 'all' && styles.itemActive
           )}
         >
-          <span className="vora-sidebar-item-icon">
+          <div className={styles.iconWrapper}>
             <Layers size={18} />
-          </span>
-          <span className="vora-sidebar-item-name">All Habits</span>
+          </div>
+          <span className={styles.name}>All Habits</span>
         </button>
 
         {isLoading ? (
-          <div className="vora-sidebar-loading">
+          <div className={styles.loading}>
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="vora-sidebar-skeleton" />
+              <div key={i} className={styles.skeleton} />
             ))}
           </div>
         ) : (
@@ -281,195 +279,6 @@ export default function CategorySidebar({
         onClose={() => setIsModalOpen(false)}
         category={editingCategory}
       />
-
-      <style jsx>{`
-        .vora-sidebar-content {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          padding: var(--vora-space-6) var(--vora-space-4);
-        }
-
-        .vora-sidebar-header {
-          margin-bottom: var(--vora-space-6);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .vora-sidebar-title {
-          font-size: var(--vora-font-size-overline);
-          font-weight: var(--vora-font-weight-bold);
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: var(--vora-color-text-tertiary);
-        }
-
-        .vora-sidebar-nav {
-          display: flex;
-          flex-direction: column;
-          gap: var(--vora-space-2);
-        }
-
-        .vora-sidebar-item {
-          display: flex;
-          align-items: center;
-          gap: var(--vora-space-3);
-          padding: var(--vora-space-3);
-          background: transparent;
-          border-radius: var(--vora-radius-md);
-          color: var(--vora-color-text-secondary);
-          transition: all var(--vora-duration-fast);
-          position: relative;
-        }
-
-        .vora-sidebar-item:hover {
-          background: var(--vora-color-bg-tertiary);
-          color: var(--vora-color-text-primary);
-        }
-
-        .vora-sidebar-item--active {
-          background: var(--vora-color-accent-subtle);
-          color: var(--vora-color-accent-primary);
-        }
-
-        /* All habits item (direct button) */
-        button.vora-sidebar-item {
-          border: none;
-          font-family: inherit;
-          font-size: var(--vora-font-size-body);
-          font-weight: var(--vora-font-weight-medium);
-          cursor: pointer;
-          width: 100%;
-          text-align: left;
-        }
-
-        .vora-sidebar-item-click-area {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          gap: var(--vora-space-3);
-          cursor: pointer;
-          overflow: hidden;
-        }
-
-        .vora-sidebar-item-drag-handle {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--vora-color-text-tertiary);
-          cursor: grab;
-          padding: 2px;
-          margin-left: -4px;
-          border-radius: 4px;
-          opacity: 0;
-          transition: all var(--vora-duration-fast);
-        }
-
-        .vora-sidebar-item:hover .vora-sidebar-item-drag-handle {
-          opacity: 1;
-        }
-
-        .vora-sidebar-item-drag-handle:active {
-          cursor: grabbing;
-        }
-
-        .vora-sidebar-item-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 20px;
-          height: 20px;
-          font-size: 16px;
-        }
-
-        .vora-sidebar-item-name {
-          flex: 1;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          font-weight: var(--vora-font-weight-medium);
-          font-size: var(--vora-font-size-body);
-        }
-
-        .vora-category-actions {
-          display: flex;
-          align-items: center;
-          gap: var(--vora-space-2);
-        }
-
-        .vora-sidebar-item-count {
-          font-size: var(--vora-font-size-caption);
-          font-weight: var(--vora-font-weight-bold);
-          background: var(--vora-color-bg-tertiary);
-          color: var(--vora-color-text-secondary);
-          padding: 2px 8px;
-          border-radius: var(--vora-radius-full);
-        }
-
-        .vora-sidebar-item--active .vora-sidebar-item-count {
-          background: var(--vora-color-accent-primary);
-          color: var(--vora-color-text-inverse);
-        }
-
-        .vora-add-category-btn,
-        .vora-category-edit-btn {
-          background: transparent;
-          border: none;
-          color: var(--vora-color-text-tertiary);
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 4px;
-          border-radius: 4px;
-          transition: all var(--vora-duration-fast);
-        }
-
-        .vora-add-category-btn:hover,
-        .vora-category-edit-btn:hover {
-          background: var(--vora-color-bg-tertiary);
-          color: var(--vora-color-accent-primary);
-        }
-
-        .vora-category-edit-btn {
-          opacity: 0;
-        }
-
-        .vora-sidebar-item:hover .vora-category-edit-btn,
-        .vora-sidebar-item--active .vora-category-edit-btn {
-          opacity: 1;
-        }
-
-        .vora-sidebar-loading {
-          display: flex;
-          flex-direction: column;
-          gap: var(--vora-space-2);
-        }
-
-        .vora-sidebar-skeleton {
-          height: 44px;
-          background: var(--vora-color-bg-tertiary);
-          border-radius: var(--vora-radius-md);
-          animation: pulse 1.5s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-          0% {
-            opacity: 0.6;
-          }
-          50% {
-            opacity: 0.3;
-          }
-          100% {
-            opacity: 0.6;
-          }
-        }
-
-        .vora-sidebar-item-wrapper--dragging {
-          z-index: 100;
-        }
-      `}</style>
     </div>
   )
 }

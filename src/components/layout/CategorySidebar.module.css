@@ -1,0 +1,217 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--vora-space-6) var(--vora-space-4);
+    background: var(--vora-color-bg-primary);
+    border-right: 1px solid var(--vora-color-border-default);
+}
+
+.header {
+    margin-bottom: var(--vora-space-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--vora-space-2);
+}
+
+.title {
+    font-size: var(--vora-font-size-overline);
+    font-weight: var(--vora-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--vora-color-text-tertiary);
+}
+
+.addBtn {
+    background: transparent;
+    border: none;
+    color: var(--vora-color-text-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--vora-space-1);
+    border-radius: var(--vora-radius-sm);
+    transition: all var(--vora-duration-fast);
+}
+
+.addBtn:hover {
+    background: var(--vora-color-bg-tertiary);
+    color: var(--vora-color-accent-primary);
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-2);
+}
+
+.itemWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: var(--vora-space-3);
+    padding: var(--vora-space-3);
+    background: transparent;
+    border-radius: var(--vora-radius-md);
+    color: var(--vora-color-text-secondary);
+    transition: all var(--vora-duration-fast) var(--vora-easing-default);
+    position: relative;
+    border: 1px solid transparent;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: var(--vora-font-size-body);
+    font-weight: var(--vora-font-weight-medium);
+    cursor: pointer;
+}
+
+.allHabitsBtn {
+    border: none;
+}
+
+.item:hover {
+    background: var(--vora-color-bg-tertiary);
+    color: var(--vora-color-text-primary);
+}
+
+.itemActive {
+    background: var(--vora-color-accent-subtle);
+    color: var(--vora-color-accent-primary);
+    border-color: var(--vora-color-accent-primary);
+}
+
+.itemActive .iconWrapper {
+    background: var(--vora-color-accent-primary);
+    color: var(--vora-color-text-inverse);
+}
+
+.clickArea {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--vora-space-3);
+    overflow: hidden;
+}
+
+.dragHandle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vora-color-text-tertiary);
+    cursor: grab;
+    padding: 2px;
+    margin-left: -6px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity var(--vora-duration-fast);
+}
+
+.item:hover .dragHandle {
+    opacity: 1;
+}
+
+.dragHandle:active {
+    cursor: grabbing;
+}
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+    border-radius: var(--vora-radius-sm);
+    background: var(--vora-color-bg-tertiary);
+    transition: all var(--vora-duration-fast);
+}
+
+.name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: var(--vora-space-2);
+}
+
+.editBtn {
+    background: transparent;
+    border: none;
+    color: var(--vora-color-text-tertiary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: all var(--vora-duration-fast);
+}
+
+.item:hover .editBtn,
+.itemActive .editBtn {
+    opacity: 1;
+}
+
+.editBtn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--vora-color-accent-primary);
+}
+
+.count {
+    font-size: var(--vora-font-size-caption);
+    font-weight: var(--vora-font-weight-bold);
+    background: var(--vora-color-bg-tertiary);
+    color: var(--vora-color-text-secondary);
+    padding: 2px 8px;
+    border-radius: var(--vora-radius-full);
+}
+
+.itemActive .count {
+    background: var(--vora-color-accent-primary);
+    color: var(--vora-color-text-inverse);
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-2);
+}
+
+.skeleton {
+    height: 48px;
+    background: var(--vora-color-bg-tertiary);
+    border-radius: var(--vora-radius-md);
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 0.6;
+    }
+}
+
+.dragging {
+    z-index: 100;
+    box-shadow: var(--vora-shadow-lg);
+    opacity: 0.9;
+}
