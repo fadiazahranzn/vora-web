@@ -130,3 +130,29 @@
     transform: rotate(-15deg);
     pointer-events: none;
 }
+.editBtn {
+  position: absolute;
+  top: var(--vora-space-2);
+  right: var(--vora-space-2);
+  padding: var(--vora-space-2);
+  background: var(--vora-color-bg-secondary);
+  border: 1px solid var(--vora-color-border-default);
+  border-radius: var(--vora-radius-sm);
+  color: var(--vora-color-text-secondary);
+  cursor: pointer;
+  opacity: 0;
+  transition: all var(--vora-duration-fast) var(--vora-easing-default);
+  z-index: 2;
+}
+
+.card:hover .editBtn {
+  opacity: 1;
+}
+
+.editBtn:hover {
+  background: var(--vora-color-accent-subtle);
+  border-color: var(--vora-color-accent-primary);
+  color: var(--vora-color-accent-primary);
+  transform: scale(1.1);
+}
+

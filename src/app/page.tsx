@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { DateNav } from '@/components/ui/DateNav'
 import { HabitCard } from '@/components/habit/HabitCard'
 import { HabitWizard } from '@/components/habit/HabitWizard'
+import { EditHabitModal } from '@/components/habit/EditHabitModal'
 import { MoodCheckinModal, MoodType } from '@/components/mood/MoodCheckinModal'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import styles from './page.module.css'
@@ -38,6 +39,8 @@ export default function Home() {
   const queryClient = useQueryClient()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [isWizardOpen, setIsWizardOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [editingHabitId, setEditingHabitId] = useState<string | null>(null)
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false)
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null)
 
@@ -242,6 +245,10 @@ export default function Home() {
                       key={habit.id}
                       habit={habit}
                       onToggle={handleToggle}
+                      onEdit={(id) => {
+                        setEditingHabitId(id)
+                        setIsEditModalOpen(true)
+                      }}
                       onDetails={(id) => console.log('Go to details:', id)}
                     />
                   ))}
@@ -257,6 +264,15 @@ export default function Home() {
         <HabitWizard
           isOpen={isWizardOpen}
           onClose={() => setIsWizardOpen(false)}
+        />
+
+        <EditHabitModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false)
+            setEditingHabitId(null)
+          }}
+          habitId={editingHabitId}
         />
 
         <MoodCheckinModal

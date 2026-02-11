@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Check, Flame } from 'lucide-react'
+import { Check, Flame, Edit } from 'lucide-react'
 import { clsx } from 'clsx'
 import styles from './HabitCard.module.css'
 
@@ -18,12 +18,14 @@ interface HabitCardProps {
     }
   }
   onToggle?: (id: string, completed: boolean) => void
+  onEdit?: (id: string) => void
   onDetails?: (id: string) => void
 }
 
 export const HabitCard: React.FC<HabitCardProps> = ({
   habit,
   onToggle,
+  onEdit,
   onDetails,
 }) => {
   const [isAnimating, setIsAnimating] = useState(false)
@@ -36,6 +38,13 @@ export const HabitCard: React.FC<HabitCardProps> = ({
         setTimeout(() => setIsAnimating(false), 400)
       }
       onToggle(habit.id, !habit.isCompleted)
+    }
+  }
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (onEdit) {
+      onEdit(habit.id)
     }
   }
 
@@ -97,6 +106,17 @@ export const HabitCard: React.FC<HabitCardProps> = ({
             )}
           </div>
         </div>
+
+        {/* Edit Button */}
+        {onEdit && (
+          <button
+            className={styles.editBtn}
+            onClick={handleEdit}
+            title="Edit habit"
+          >
+            <Edit size={16} />
+          </button>
+        )}
 
         {/* Completion Stamp (Subtle) */}
         {habit.isCompleted && (
