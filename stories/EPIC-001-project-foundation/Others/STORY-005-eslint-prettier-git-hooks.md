@@ -59,9 +59,9 @@ THEN Husky hooks are automatically set up (via `prepare` script)
 - **External Dependencies:** None
 
 ## Definition of Done
-- [ ] ESLint configured with TypeScript + Next.js rules
-- [ ] Prettier configured with project conventions
-- [ ] Husky pre-commit hook installed and working
-- [ ] lint-staged runs on staged files only
-- [ ] `npm run lint` and `npm run format` scripts work
-- [ ] Code merged to main branch
+- [x] ESLint configured with TypeScript + Next.js rules
+- [x] Prettier configured with project conventions
+- [x] Husky pre-commit hook installed and working
+- [x] lint-staged runs on staged files only
+- [x] `npm run lint` and `npm run format` scripts work
+- [x] Code merged to main branch

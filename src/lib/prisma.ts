@@ -1,3 +1,4 @@
+import { env } from './env';
 import { PrismaClient } from '@prisma/client';
 
 const softDeleteModels = [
@@ -81,4 +82,4 @@ const globalForPrisma = global as unknown as { prisma: PrismaClientSingleton };
 
 export const prisma = globalForPrisma.prisma || prismaClientSingleton();
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+if (env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

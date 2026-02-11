@@ -58,8 +58,8 @@ THEN .gitignore prevents .env.local from being committed
 - **External Dependencies:** None
 
 ## Definition of Done
-- [ ] `.env.example` with all variables documented
-- [ ] Zod validation schema for env vars
-- [ ] Missing variable generates descriptive error at startup
-- [ ] `.gitignore` excludes `.env*` except `.env.example`
-- [ ] Code merged to main branch
+- [x] `.env.example` with all variables documented
+- [x] Zod validation schema for env vars
+- [x] Missing variable generates descriptive error at startup
+- [x] `.gitignore` excludes `.env*` except `.env.example`
+- [x] Code merged to main branch
