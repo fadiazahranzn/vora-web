@@ -11,7 +11,7 @@ type ViewType = 'weekly' | 'monthly' | 'yearly';
 
 interface ChartDataPoint {
     date: string;
-    value: number;
+    rate: number;
 }
 
 export function ActivityLineChart() {

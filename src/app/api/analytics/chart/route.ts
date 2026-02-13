@@ -153,7 +153,7 @@ export async function GET(req: NextRequest) {
 
             return {
                 date: point.label,
-                value: percentage
+                rate: percentage
             };
         });
 

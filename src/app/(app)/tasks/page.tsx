@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import DashboardLayout from '@/components/layout/DashboardLayout'
 import { TaskFilterTabs, TaskFilter } from '@/components/task/TaskFilterTabs'
 import { TaskSortDropdown, TaskSort } from '@/components/task/TaskSortDropdown'
 import { TaskCard } from '@/components/task/TaskCard'
@@ -111,62 +110,61 @@ export default function TasksPage() {
     }
 
     return (
-        <DashboardLayout>
-            <div className={styles.container}>
-                <header className={styles.header}>
-                    <h1>Tasks</h1>
-                    <p className={styles.subtitle}>Streamline your productivity</p>
-                </header>
+        <div className={styles.container}>
+            <header className={styles.header}>
+                <h1>Tasks</h1>
+                <p className={styles.subtitle}>Streamline your productivity</p>
+            </header>
 
-                <TaskFilterTabs activeFilter={filter} onFilterChange={setFilter} />
+            <TaskFilterTabs activeFilter={filter} onFilterChange={setFilter} />
 
-                <div className={styles.controls}>
-                    <div className={styles.stats}>
-                        {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'} found
-                    </div>
-                    <TaskSortDropdown activeSort={sort} onSortChange={setSort} />
+            <div className={styles.controls}>
+                <div className={styles.stats}>
+                    {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'} found
                 </div>
-
-                <div className={styles.taskList}>
-                    {isLoading ? (
-                        <div className={styles.loadingGrid}>
-                            {[1, 2, 3, 4].map((i) => (
-                                <Skeleton key={i} className={styles.skeletonCard} />
-                            ))}
-                        </div>
-                    ) : tasks.length === 0 ? (
-                        <EmptyState
-                            title={filter === 'overdue' ? 'No overdue tasks!' : 'Nothing on your plate!'}
-                            description={
-                                filter === 'overdue'
-                                    ? 'Great job keeping up with your schedule.'
-                                    : 'Start by adding a task to your list.'
-                            }
-                            actionLabel="Create Task"
-                            onAction={handleCreateTask}
-                            mascotExpression={filter === 'overdue' ? 'happy' : 'sleeping'}
-                        />
-                    ) : (
-                        tasks.map((task) => (
-                            <TaskCard
-                                key={task.id}
-                                task={task}
-                                onToggle={handleToggle}
-                                onEdit={handleEditTask}
-                            />
-                        ))
-                    )}
-                </div>
-
-                <FAB onClick={handleCreateTask} />
-
-                <TaskModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    taskToEdit={editingTask}
-                    onSuccess={handleModalSuccess}
-                />
+                <TaskSortDropdown activeSort={sort} onSortChange={setSort} />
             </div>
-        </DashboardLayout>
+
+            <div className={styles.taskList}>
+                {isLoading ? (
+                    <div className={styles.loadingGrid}>
+                        {[1, 2, 3, 4].map((i) => (
+                            <Skeleton key={i} className={styles.skeletonCard} />
+                        ))}
+                    </div>
+                ) : tasks.length === 0 ? (
+                    <EmptyState
+                        title={filter === 'overdue' ? 'No overdue tasks!' : 'Nothing on your plate!'}
+                        description={
+                            filter === 'overdue'
+                                ? 'Great job keeping up with your schedule.'
+                                : 'Start by adding a task to your list.'
+                        }
+                        actionLabel="Create Task"
+                        onAction={handleCreateTask}
+                        mascotEmoji={filter === 'overdue' ? '😊' : '😴'}
+                    />
+                ) : (
+                    tasks.map((task) => (
+                        <TaskCard
+                            key={task.id}
+                            task={task}
+                            onToggle={handleToggle}
+                            onEdit={handleEditTask}
+                        />
+                    ))
+                )}
+            </div>
+
+            <FAB onClick={handleCreateTask} />
+
+            <TaskModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                taskToEdit={editingTask}
+                onSuccess={handleModalSuccess}
+            />
+        </div>
+
     )
 }

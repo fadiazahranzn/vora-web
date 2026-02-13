@@ -5,31 +5,35 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    padding: var(--space-4);
     z-index: 1000;
     animation: fadeIn var(--transition-fast);
 }
 
-.modal {
+.sheet {
     background-color: var(--color-bg-white);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     max-height: 90vh;
     animation: slideUp var(--transition-normal);
-    position: relative;
+}
+
+.handle {
+    width: 40px;
+    height: 4px;
+    background-color: var(--color-bg-muted);
+    border-radius: var(--radius-full);
+    margin: var(--space-2) auto;
 }
 
 .header {
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--color-border-subtle);
+    padding: var(--space-4) var(--space-4) var(--space-2);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,33 +45,13 @@
     margin: 0;
 }
 
-.closeButton {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    line-height: 1;
-    color: var(--color-text-muted);
-    padding: var(--space-1);
-    border-radius: var(--radius-sm);
-    transition: background var(--transition-fast);
-}
-
-.closeButton:hover {
-    background-color: var(--color-bg-subtle);
-}
-
 .body {
     padding: var(--space-4);
     overflow-y: auto;
 }
 
-.footer {
-    padding: var(--space-4);
-    border-top: 1px solid var(--color-border-subtle);
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--space-2);
+@media (min-width: 768px) {
+    /* Hide on desktop or convert to modal? Requirement says "mobile-only" */
 }
 
 @keyframes fadeIn {
@@ -82,12 +66,10 @@
 
 @keyframes slideUp {
     from {
-        transform: translateY(20px);
-        opacity: 0;
+        transform: translateY(100%);
     }
 
     to {
         transform: translateY(0);
-        opacity: 1;
     }
 }

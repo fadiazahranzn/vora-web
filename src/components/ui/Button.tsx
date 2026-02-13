@@ -1,55 +1,53 @@
-import React from 'react'
+import React from 'react';
+import styles from './Button.module.css';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline'
-  size?: 'sm' | 'md' | 'lg' | 'full'
-  isLoading?: boolean
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
-  fullWidth?: boolean
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
+  size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  iconOnly?: boolean;
 }
 
-export function Button({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
-  leftIcon,
-  rightIcon,
-  children,
-  disabled,
-  className = '',
-  fullWidth = false,
-  ...props
-}: ButtonProps) {
-  const baseClass = 'vora-btn'
-  const variantClass = `vora-btn--${variant}`
-  const sizeClass =
-    size === 'full' || fullWidth ? 'vora-btn--full' : `vora-btn--${size}`
-  const loadingClass = isLoading ? 'vora-btn--loading' : ''
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({
+    children,
+    className = '',
+    variant = 'primary',
+    size = 'md',
+    isLoading = false,
+    leftIcon,
+    rightIcon,
+    iconOnly = false,
+    disabled,
+    ...props
+  }, ref) => {
+    const classes = [
+      styles.button,
+      styles[variant],
+      styles[size],
+      isLoading ? styles.loading : '',
+      iconOnly ? styles.iconOnly : '',
+      className
+    ].filter(Boolean).join(' ');
 
-  return (
-    <button
-      className={`${baseClass} ${variantClass} ${sizeClass} ${loadingClass} ${className}`}
-      disabled={disabled || isLoading}
-      {...props}
-    >
-      {isLoading ? (
-        <span className="vora-btn__spinner" aria-label="Loading" />
-      ) : (
-        <>
-          {leftIcon && (
-            <span className="vora-btn__icon vora-btn__icon-left">
-              {leftIcon}
-            </span>
-          )}
-          {children}
-          {rightIcon && (
-            <span className="vora-btn__icon vora-btn__icon-right">
-              {rightIcon}
-            </span>
-          )}
-        </>
-      )}
-    </button>
-  )
-}
+    return (
+      <button
+        ref={ref}
+        className={classes}
+        disabled={disabled || isLoading}
+        aria-busy={isLoading}
+        {...props}
+      >
+        {isLoading && <span className={styles.spinner} role="status" aria-label="Loading" />}
+        {!isLoading && leftIcon && <span className={styles.icon}>{leftIcon}</span>}
+        {!isLoading && !iconOnly && <span className={styles.content}>{children}</span>}
+        {!isLoading && iconOnly && children}
+        {!isLoading && rightIcon && <span className={styles.icon}>{rightIcon}</span>}
+      </button>
+    );
+  }
+);
+
+Button.displayName = 'Button';

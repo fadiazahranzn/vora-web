@@ -1,48 +1,26 @@
-import React from 'react'
+import React from 'react';
+import styles from './Card.module.css';
 
-interface CardProps {
-  variant?: 'static' | 'interactive' | 'expandable' | 'selectable'
-  selected?: boolean
-  onClick?: () => void
-  children: React.ReactNode
-  className?: string // Add className
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: 'standard' | 'elevated' | 'interactive';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
-export function Card({
-  variant = 'static',
-  selected,
-  onClick,
-  children,
-  className = '',
-}: CardProps) {
-  const isClickable = variant !== 'static'
+export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ children, className = '', variant = 'standard', padding = 'md', ...props }, ref) => {
+    const classes = [
+      styles.card,
+      styles[variant],
+      styles[`p-${padding === 'none' ? '0' : padding}`],
+      className
+    ].filter(Boolean).join(' ');
 
-  // Base classes directly mapped from global CSS
-  const classes = [
-    'vora-card',
-    `vora-card--${variant}`,
-    selected ? 'vora-card--selected' : '',
-    isClickable ? 'vora-card--interactive' : '',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ')
+    return (
+      <div ref={ref} className={classes} {...props}>
+        {children}
+      </div>
+    );
+  }
+);
 
-  return (
-    <div
-      className={classes}
-      onClick={isClickable ? onClick : undefined}
-      role={isClickable ? 'button' : undefined}
-      tabIndex={isClickable ? 0 : undefined}
-      onKeyDown={
-        isClickable
-          ? (e) => {
-              if (e.key === 'Enter') onClick?.()
-            }
-          : undefined
-      }
-    >
-      {children}
-    </div>
-  )
-}
+Card.displayName = 'Card';

@@ -1,76 +1,76 @@
-'use client'
+import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import styles from './Modal.module.css';
 
-import { useEffect, useCallback } from 'react'
-import { X } from 'lucide-react'
-import { clsx } from 'clsx'
-import styles from './Modal.module.css'
-
-interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
-  title: string
-  children: React.ReactNode
-  footer?: React.ReactNode
-  size?: 'sm' | 'md' | 'lg'
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-export function Modal({
-  isOpen,
-  onClose,
-  title,
-  children,
-  footer,
-  size = 'md',
-}: ModalProps) {
-  const handleEsc = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    },
-    [onClose]
-  )
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, footer, size = 'md' }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
-      window.addEventListener('keydown', handleEsc)
-    } else {
-      document.body.style.overflow = 'unset'
-      window.removeEventListener('keydown', handleEsc)
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+
+      // Simple focus trap logic
+      const focusableElements = modalRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements && focusableElements.length > 0) {
+        (focusableElements[0] as HTMLElement).focus();
+      }
     }
+
     return () => {
-      document.body.style.overflow = 'unset'
-      window.removeEventListener('keydown', handleEsc)
-    }
-  }, [isOpen, handleEsc])
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
-  return (
-    <div className={styles.overlay} onClick={onClose}>
+  const modalContent = (
+    <div className={styles.overlay} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div
-        className={clsx(styles.modal, styles[`modal_${size}`])}
-        onClick={(e) => e.stopPropagation()}
+        ref={modalRef}
+        className={`${styles.modal} ${styles[size]}`}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="modal-title"
+        aria-labelledby={title ? 'modal-title' : undefined}
       >
-        <header className={styles.header}>
-          <h2 id="modal-title" className={styles.title}>
-            {title}
-          </h2>
+        <div className={styles.header}>
+          {title && <h2 id="modal-title" className={styles.title}>{title}</h2>}
           <button
+            className={styles.closeButton}
             onClick={onClose}
-            className={styles.close}
             aria-label="Close modal"
+            type="button"
           >
-            <X size={20} />
+            &times;
           </button>
-        </header>
-
-        <div className={styles.body}>{children}</div>
-
-        {footer && <footer className={styles.footer}>{footer}</footer>}
+        </div>
+        <div className={styles.body}>
+          {children}
+        </div>
+        {footer && (
+          <div className={styles.footer}>
+            {footer}
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+
+  return createPortal(modalContent, document.body);
+};

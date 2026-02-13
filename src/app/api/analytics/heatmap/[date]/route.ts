@@ -28,6 +28,7 @@ export async function GET(
             where: {
                 userId,
                 createdAt: { lte: targetDate },
+                deletedAt: undefined,
                 OR: [
                     { deletedAt: null },
                     { deletedAt: { gte: targetDate } }

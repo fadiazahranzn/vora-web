@@ -1,61 +1,73 @@
-import React, { forwardRef } from 'react'
+import React, { useId } from 'react';
+import styles from './Input.module.css';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string
-  error?: string
-  helperText?: string
-  leadingIcon?: React.ReactNode
-  trailingAction?: React.ReactNode
-  className?: string // Add className
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+  label?: string;
+  error?: string;
+  helperText?: string;
+  multiline?: boolean;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  (
-    {
-      label,
-      error,
-      helperText,
-      leadingIcon,
-      trailingAction,
-      id,
-      className = '',
-      ...props
-    },
-    ref
-  ) => {
-    const inputId = id || label.toLowerCase().replace(/\s+/g, '-')
+export const Input = React.forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
+  ({ label, error, helperText, multiline = false, className = '', id, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = id || generatedId;
+    const errorId = `${inputId}-error`;
+    const helperId = `${inputId}-helper`;
+
+    const inputClasses = [
+      styles.input,
+      error ? styles.error : '',
+      multiline ? styles.textarea : '',
+      className
+    ].filter(Boolean).join(' ');
+
+    const ariaDescribedBy = [
+      error ? errorId : '',
+      helperText ? helperId : ''
+    ].filter(Boolean).join(' ');
 
     return (
-      <div
-        className={`vora-input ${error ? 'vora-input--error' : ''} ${className}`}
-      >
-        <label htmlFor={inputId} className="vora-input__label">
-          {label}
-        </label>
-        <div className="vora-input__container">
-          {leadingIcon && <div className="vora-input__icon">{leadingIcon}</div>}
-          <input
-            ref={ref}
-            id={inputId}
-            className="vora-input__field"
-            aria-invalid={!!error}
-            {...props}
-          />
-          {trailingAction && (
-            <div className="vora-input__action">{trailingAction}</div>
+      <div className={styles.container}>
+        {label && (
+          <label htmlFor={inputId} className={styles.label}>
+            {label}
+          </label>
+        )}
+        <div className={styles.inputWrapper}>
+          {multiline ? (
+            <textarea
+              id={inputId}
+              ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
+              className={inputClasses}
+              aria-invalid={!!error}
+              aria-describedby={ariaDescribedBy || undefined}
+              {...props as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
+            />
+          ) : (
+            <input
+              id={inputId}
+              ref={ref as React.ForwardedRef<HTMLInputElement>}
+              className={inputClasses}
+              aria-invalid={!!error}
+              aria-describedby={ariaDescribedBy || undefined}
+              {...props as React.InputHTMLAttributes<HTMLInputElement>}
+            />
           )}
         </div>
         {error && (
-          <p className="vora-input__error" role="alert">
+          <span id={errorId} className={styles.errorText} role="alert">
             {error}
-          </p>
+          </span>
         )}
         {!error && helperText && (
-          <p className="vora-input__helper">{helperText}</p>
+          <span id={helperId} className={styles.helperText}>
+            {helperText}
+          </span>
         )}
       </div>
-    )
+    );
   }
-)
+);
 
-Input.displayName = 'Input'
+Input.displayName = 'Input';

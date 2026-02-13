@@ -1,0 +1,24 @@
+.container {
+    width: 100%;
+    background-color: var(--color-bg-muted);
+    border-radius: var(--radius-full);
+    height: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar {
+    height: 100%;
+    background-color: var(--color-primary-500);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-normal);
+}
+
+.label {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-1);
+    color: var(--color-text-secondary);
+}

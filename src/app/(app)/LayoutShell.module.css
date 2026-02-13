@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--vora-color-bg-secondary);
+    color: var(--vora-color-text-primary);
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* Prevent flex-item from overflowing */
+    overflow-y: auto;
+    position: relative;
+    /* Add padding-bottom on mobile to account for BottomNav */
+    padding-bottom: 56px;
+}
+
+.content {
+    flex: 1;
+    padding: var(--vora-space-6);
+    max-width: var(--vora-content-max-width);
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Adjustments for Desktop */
+@media (min-width: 1024px) {
+    .main {
+        padding-bottom: 0;
+    }
+
+    .content {
+        padding: var(--vora-space-8);
+    }
+}
+
+/* Adjustments for mobile notched phones */
+@media (max-width: 1023px) {
+    .main {
+        padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    }
+}

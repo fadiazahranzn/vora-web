@@ -15,7 +15,7 @@ import styles from './ActivityLineChart.module.css';
 
 interface ChartDataPoint {
     date: string;
-    value: number;
+    rate: number;
 }
 
 interface ActivityChartImplProps {
@@ -37,12 +37,12 @@ const ActivityChartImpl: React.FC<ActivityChartImplProps> = ({ data, view }) => 
         if (active && payload && payload.length) {
             // label is likely the date string
             const dateStr = label;
-            const value = payload[0].value;
+            const rate = payload[0].payload.rate;
 
             return (
                 <div className={styles.tooltip}>
                     <div className={styles.tooltipDate}>{dateStr}</div>
-                    <div className={styles.tooltipValue}>{value}%</div>
+                    <div className={styles.tooltipValue}>{rate}%</div>
                 </div>
             );
         }
@@ -79,7 +79,7 @@ const ActivityChartImpl: React.FC<ActivityChartImplProps> = ({ data, view }) => 
                 <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'var(--vora-color-border)', strokeWidth: 2 }} />
                 <Line
                     type="monotone"
-                    dataKey="value"
+                    dataKey="rate"
                     stroke="var(--vora-color-primary)"
                     strokeWidth={3}
                     activeDot={{ r: 6, strokeWidth: 0 }}

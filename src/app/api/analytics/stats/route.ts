@@ -23,8 +23,8 @@ export async function GET(req: NextRequest) {
         const habits = await prisma.habit.findMany({
             where: {
                 userId,
+                deletedAt: undefined,
                 // We want to calculate stats for all time, so we need habits that were active at some point.
-                // However, for streak/perfect days, we only care about habits that existed on those days.
             }
         });
 
@@ -40,12 +40,12 @@ export async function GET(req: NextRequest) {
         // 2. Determine the date range for all-time stats
         // We look at the first habit creation date or first completion.
         const firstHabit = await prisma.habit.findFirst({
-            where: { userId },
+            where: { userId, deletedAt: undefined },
             orderBy: { createdAt: 'asc' }
         });
 
         const firstCompletion = await prisma.habitCompletion.findFirst({
-            where: { userId },
+            where: { userId, deletedAt: undefined },
             orderBy: { date: 'asc' }
         });
 

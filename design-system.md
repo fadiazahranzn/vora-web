@@ -33,36 +33,40 @@ The Vora Design System is the single source of truth for building all UI surface
 
 ### 2.1 Naming Convention
 
-```
---vora-{category}-{property}-{variant}
+Vora uses a two-tier token system:
+1. **Core Tokens:** Low-level, generic values (colors, spacing, etc.) defined in `tokens.css`.
+2. **Semantic Tokens (Vora):** Prefixed with `--vora-`, these map core tokens to specific functional roles (e.g., `--vora-color-bg-primary`) defined in `globals.css`.
 
-Examples:
-  --vora-color-bg-primary
-  --vora-space-4
-  --vora-radius-card
-  --vora-font-size-lg
-```
+**Core Token Examples:**
+- `--color-primary-500`
+- `--space-4`
+- `--radius-md`
+
+**Semantic Token Examples:**
+- `--vora-color-bg-primary`
+- `--vora-space-4`
+- `--vora-radius-sm`
 
 ### 2.2 Color Tokens
 
 #### Core Palette
 
-| Token                          | Light Mode   | Dark Mode    | Usage                          |
+| Token                          | Light Mode   | Dark Mode    | Core Token Mapping             |
 | ------------------------------ | ------------ | ------------ | ------------------------------ |
-| `--vora-color-bg-primary`      | `#FFFFFF`    | `#121212`    | Page background                |
-| `--vora-color-bg-secondary`    | `#FFE2E2`    | `#1E1E1E`    | Cards, sections, sidebar       |
-| `--vora-color-bg-tertiary`     | `#FFF0F0`    | `#2A2A2A`    | Hover states, subtle fills     |
-| `--vora-color-bg-overlay`      | `rgba(0,0,0,0.5)` | `rgba(0,0,0,0.7)` | Modal backdrop       |
-| `--vora-color-text-primary`    | `#1A1A1A`    | `#FFFFFF`    | Headings, body text            |
-| `--vora-color-text-secondary`  | `#666666`    | `#AAAAAA`    | Captions, metadata             |
-| `--vora-color-text-tertiary`   | `#999999`    | `#777777`    | Placeholders, disabled text    |
-| `--vora-color-text-inverse`    | `#FFFFFF`    | `#121212`    | Text on accent backgrounds     |
-| `--vora-color-accent-primary`  | `#ED9DFF`    | `#FCD6EF`    | Primary buttons, links, active |
-| `--vora-color-accent-hover`    | `#D87BF0`    | `#FFE4F5`    | Accent hover state             |
-| `--vora-color-accent-pressed`  | `#C45DE0`    | `#F0BAD8`    | Accent active/pressed state    |
-| `--vora-color-accent-subtle`   | `#F5E0FF`    | `#3A2040`    | Accent backgrounds, badges     |
-| `--vora-color-border-default`  | `#E0E0E0`    | `#3A3A3A`    | Card borders, dividers         |
-| `--vora-color-border-focus`    | `#ED9DFF`    | `#FCD6EF`    | Focused input borders          |
+| `--vora-color-bg-primary`      | `#FFFFFF`    | `#0A0A0A`    | `var(--color-bg-white)`        |
+| `--vora-color-bg-secondary`    | `#FAFAFA`    | `#121212`    | `var(--color-bg-canvas)`       |
+| `--vora-color-bg-tertiary`     | `#F5F5F5`    | `#1A1A1A`    | `var(--color-bg-subtle)`       |
+| `--vora-color-bg-overlay`      | `rgba(0,0,0,0.5)` | `rgba(0,0,0,0.7)` | —                         |
+| `--vora-color-text-primary`    | `#171717`    | `#FAFAFA`    | `var(--color-text-primary)`      |
+| `--vora-color-text-secondary`  | `#525252`    | `#A3A3A3`    | `var(--color-text-secondary)`    |
+| `--vora-color-text-tertiary`   | `#737373`    | `#737373`    | `var(--color-text-muted)`        |
+| `--vora-color-text-inverse`    | `#FFFFFF`    | `#0A0A0A`    | `var(--color-bg-white)`        |
+| `--vora-color-accent-primary`  | `#EDABFF`    | `#8E529A`    | `var(--color-primary-300)`     |
+| `--vora-color-accent-hover`    | `#E275FF`    | `#B268C1`    | `var(--color-primary-400)`     |
+| `--vora-color-accent-pressed`  | `#D946EF`    | `#D581E7`    | `var(--color-primary-500)`     |
+| `--vora-color-accent-subtle`   | `#FAE8FF`    | `#4A2B50`    | `var(--color-primary-100)`     |
+| `--vora-color-border-default`  | `#E5E5E5`    | `#262626`    | `var(--color-border-subtle)`    |
+| `--vora-color-border-focus`    | `#EDABFF`    | `#8E529A`    | `var(--color-primary-300)`     |
 
 #### Semantic Colors
 
@@ -217,152 +221,49 @@ Based on an 8px grid:
    VORA DESIGN SYSTEM — CSS Custom Properties
    ═══════════════════════════════════════ */
 
+@import './tokens.css';
+
 :root {
   /* ── Colors: Light Mode (default) ── */
-  --vora-color-bg-primary: #FFFFFF;
-  --vora-color-bg-secondary: #FFE2E2;
-  --vora-color-bg-tertiary: #FFF0F0;
+  --vora-color-bg-primary: var(--color-bg-white);
+  --vora-color-bg-secondary: var(--color-bg-canvas);
+  --vora-color-bg-tertiary: var(--color-bg-subtle);
   --vora-color-bg-overlay: rgba(0, 0, 0, 0.5);
 
-  --vora-color-text-primary: #1A1A1A;
-  --vora-color-text-secondary: #666666;
-  --vora-color-text-tertiary: #999999;
-  --vora-color-text-inverse: #FFFFFF;
+  --vora-color-text-primary: var(--color-text-primary);
+  --vora-color-text-secondary: var(--color-text-secondary);
+  --vora-color-text-tertiary: var(--color-text-muted);
+  --vora-color-text-inverse: var(--color-bg-white);
 
-  --vora-color-accent-primary: #ED9DFF;
-  --vora-color-accent-hover: #D87BF0;
-  --vora-color-accent-pressed: #C45DE0;
-  --vora-color-accent-subtle: #F5E0FF;
+  --vora-color-accent-primary: var(--color-primary-300);
+  --vora-color-accent-hover: var(--color-primary-400);
+  --vora-color-accent-pressed: var(--color-primary-500);
+  --vora-color-accent-subtle: var(--color-primary-100);
 
-  --vora-color-border-default: #E0E0E0;
-  --vora-color-border-focus: #ED9DFF;
+  --vora-color-border-default: var(--color-border-subtle);
+  --vora-color-border-focus: var(--color-primary-300);
 
-  --vora-color-success: #00C853;
-  --vora-color-success-bg: #E8F5E9;
-  --vora-color-warning: #FFD600;
-  --vora-color-warning-bg: #FFFDE7;
-  --vora-color-error: #FF1744;
-  --vora-color-error-bg: #FFEBEE;
-  --vora-color-info: #2196F3;
-  --vora-color-info-bg: #E3F2FD;
+  --vora-color-success: var(--color-success);
+  --vora-color-success-bg: var(--color-success-subtle);
+  --vora-color-warning: var(--color-warning);
+  --vora-color-warning-bg: var(--color-warning-subtle);
+  --vora-color-error: var(--color-error);
+  --vora-color-error-bg: var(--color-error-subtle);
+  --vora-color-info: var(--color-info);
+  --vora-color-info-bg: var(--color-info-subtle);
 
-  /* ── Card ── */
-  --vora-color-card-bg: #FFFFFF;
-  --vora-color-card-border: #E0E0E0;
-
-  /* ── Typography ── */
-  --vora-font-family: 'Inter', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, sans-serif;
-
-  --vora-font-size-display: 32px;
-  --vora-font-size-h1: 24px;
-  --vora-font-size-h2: 20px;
-  --vora-font-size-h3: 16px;
-  --vora-font-size-body: 14px;
-  --vora-font-size-caption: 12px;
-  --vora-font-size-overline: 11px;
-
-  --vora-font-weight-regular: 400;
-  --vora-font-weight-medium: 500;
-  --vora-font-weight-semibold: 600;
-  --vora-font-weight-bold: 700;
-
-  --vora-line-height-tight: 1.2;
-  --vora-line-height-normal: 1.4;
-  --vora-line-height-relaxed: 1.5;
-
-  /* ── Spacing (8px grid) ── */
-  --vora-space-0: 0px;
-  --vora-space-1: 4px;
-  --vora-space-2: 8px;
-  --vora-space-3: 12px;
-  --vora-space-4: 16px;
-  --vora-space-5: 20px;
-  --vora-space-6: 24px;
-  --vora-space-8: 32px;
-  --vora-space-10: 40px;
-  --vora-space-12: 48px;
-  --vora-space-16: 64px;
-
-  /* ── Border Radius ── */
-  --vora-radius-sm: 8px;
-  --vora-radius-md: 12px;
-  --vora-radius-lg: 16px;
-  --vora-radius-xl: 24px;
-  --vora-radius-full: 9999px;
-
-  /* ── Shadows ── */
-  --vora-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  --vora-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
-  --vora-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
-  --vora-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.20);
-  --vora-shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.06);
-
-  /* ── Motion ── */
-  --vora-duration-instant: 100ms;
-  --vora-duration-fast: 150ms;
-  --vora-duration-normal: 250ms;
-  --vora-duration-slow: 400ms;
-  --vora-duration-emphasis: 500ms;
-  --vora-duration-celebration: 2000ms;
-  --vora-easing-default: cubic-bezier(0.4, 0, 0.2, 1);
-  --vora-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-  --vora-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
-  --vora-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  /* ── Z-Index ── */
-  --vora-z-base: 0;
-  --vora-z-dropdown: 100;
-  --vora-z-sticky: 200;
-  --vora-z-overlay: 300;
-  --vora-z-modal: 400;
-  --vora-z-toast: 500;
-  --vora-z-tooltip: 600;
-
-  /* ── Layout ── */
-  --vora-sidebar-width: 260px;
-  --vora-topbar-height: 56px;
-  --vora-bottomnav-height: 64px;
-  --vora-content-max-width: 960px;
+  /* Mapping Typography, Spacing, etc... */
+  --vora-font-family: var(--font-family-sans);
+  --vora-space-4: var(--space-4);
+  --vora-radius-md: var(--radius-md);
+  /* Full scale defined in globals.css */
 }
 
 /* ── Dark Mode ── */
 [data-theme="dark"],
 .dark {
-  --vora-color-bg-primary: #121212;
-  --vora-color-bg-secondary: #1E1E1E;
-  --vora-color-bg-tertiary: #2A2A2A;
+  /* Mappings persist, tokens handle value changes */
   --vora-color-bg-overlay: rgba(0, 0, 0, 0.7);
-
-  --vora-color-text-primary: #FFFFFF;
-  --vora-color-text-secondary: #AAAAAA;
-  --vora-color-text-tertiary: #777777;
-  --vora-color-text-inverse: #121212;
-
-  --vora-color-accent-primary: #FCD6EF;
-  --vora-color-accent-hover: #FFE4F5;
-  --vora-color-accent-pressed: #F0BAD8;
-  --vora-color-accent-subtle: #3A2040;
-
-  --vora-color-border-default: #3A3A3A;
-  --vora-color-border-focus: #FCD6EF;
-
-  --vora-color-success: #69F0AE;
-  --vora-color-success-bg: #1B3A26;
-  --vora-color-warning: #FFE082;
-  --vora-color-warning-bg: #3A3520;
-  --vora-color-error: #FF8A80;
-  --vora-color-error-bg: #3A1A1A;
-  --vora-color-info: #90CAF9;
-  --vora-color-info-bg: #1A2A3A;
-
-  --vora-color-card-bg: #2A2A2A;
-  --vora-color-card-border: #3A3A3A;
-
-  --vora-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --vora-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --vora-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --vora-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
 }
 
 /* ── System Theme Auto-Detection ── */

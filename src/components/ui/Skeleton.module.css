@@ -1,0 +1,36 @@
+.skeleton {
+    background-color: var(--color-bg-muted);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.line {
+    height: 1rem;
+    margin-bottom: var(--space-2);
+}
+
+.circle {
+    border-radius: var(--radius-full);
+    aspect-ratio: 1;
+}
+
+.rect {
+    height: auto;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

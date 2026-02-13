@@ -14,7 +14,6 @@ import { HabitCard } from '@/components/habit/HabitCard'
 import { HabitWizard } from '@/components/habit/HabitWizard'
 import { EditHabitModal } from '@/components/habit/EditHabitModal'
 import { MoodCheckinModal, MoodType } from '@/components/mood/MoodCheckinModal'
-import DashboardLayout from '@/components/layout/DashboardLayout'
 import styles from './page.module.css'
 
 interface Category {
@@ -245,123 +244,109 @@ export default function Home() {
   }
 
   return (
-    <DashboardLayout>
-      <div className={styles.container}>
-        {/* Header Section */}
-        <section className={styles.welcomeSection}>
-          <div className={styles.welcomeText}>
-            <h1>
-              {greeting}, {session?.user?.name || 'Voran'}! ✨
-            </h1>
-            <p>Ready to crush your goals today?</p>
-            <div className={styles.progressSection}>
-              <ProgressBar progress={completionRate} label="Today's Progress" />
-            </div>
+    <div className={styles.container}>
+      {/* Header Section */}
+      <section className={styles.welcomeSection}>
+        <div className={styles.welcomeText}>
+          <h1>
+            {greeting}, {session?.user?.name || 'Voran'}! ✨
+          </h1>
+          <p>Ready to crush your goals today?</p>
+          <div className={styles.progressSection}>
+            <ProgressBar value={completionRate} label="Today's Progress" />
           </div>
-          <Mascot
-            size={100}
-            expression={
-              completionRate === 100
-                ? 'happy'
-                : completionRate > 50
-                  ? 'motivated'
-                  : 'neutral'
-            }
-          />
-        </section>
+        </div>
+        <Mascot
+          size={100}
+          expression={
+            completionRate === 100
+              ? 'happy'
+              : completionRate > 50
+                ? 'motivated'
+                : 'neutral'
+          }
+        />
+      </section>
 
-        {/* Date Navigation */}
-        {/* Date Navigation */}
-        {mounted && selectedDate ? (
-          <DatePicker
-            selectedDate={selectedDate}
-            onDateChange={(date) => setSelectedDate(date)}
-            completionDates={completionData?.dates || []}
+      {/* Date Navigation */}
+      {/* Date Navigation */}
+      {mounted && selectedDate ? (
+        <DatePicker
+          selectedDate={selectedDate}
+          onDateChange={(date) => setSelectedDate(date)}
+          completionDates={completionData?.dates || []}
+        />
+      ) : (
+        <div style={{ height: '56px', marginBottom: '24px' }} />
+      )}
+
+      {/* Habits List */}
+      <section className={styles.habitSection}>
+        {isLoading ? (
+          <div className={styles.loadingGrid}>
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className={styles.skeletonCard} />
+            ))}
+          </div>
+        ) : habits.length === 0 ? (
+          <EmptyState
+            title="No habits scheduled"
+            description="It looks like you have nothing planned for this date. Time to start a new habit?"
+            actionLabel="Create First Habit"
+            onAction={() => setIsWizardOpen(true)}
+            mascotEmoji="😴"
           />
         ) : (
-          <div style={{ height: '56px', marginBottom: '24px' }} />
-        )}
-
-        {/* Habits List */}
-        <section className={styles.habitSection}>
-          {isLoading ? (
-            <div className={styles.loadingGrid}>
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className={styles.skeletonCard} />
-              ))}
-            </div>
-          ) : habits.length === 0 ? (
-            <EmptyState
-              title="No habits scheduled"
-              description="It looks like you have nothing planned for this date. Time to start a new habit?"
-              actionLabel="Create First Habit"
-              onAction={() => setIsWizardOpen(true)}
-              mascotExpression="sleeping"
-            />
-          ) : (
-            groupedHabits.map((group) => (
-              <div key={group.category.id} className={styles.categoryGroup}>
-                <div className={styles.categoryHeader}>
-                  <span>{group.category.icon}</span>
-                  <h3>{group.category.name}</h3>
-                </div>
-                <div className={styles.habitGrid}>
-                  {group.items.map((habit) => (
-                    <HabitCard
-                      key={habit.id}
-                      habit={habit}
-                      onToggle={handleToggle}
-                      onEdit={(id) => {
-                        setEditingHabitId(id)
-                        setIsEditModalOpen(true)
-                      }}
-                      onDetails={(id) => console.log('Go to details:', id)}
-                    />
-                  ))}
-                </div>
+          groupedHabits.map((group) => (
+            <div key={group.category.id} className={styles.categoryGroup}>
+              <div className={styles.categoryHeader}>
+                <span>{group.category.icon}</span>
+                <h3>{group.category.name}</h3>
               </div>
-            ))
-          )}
-        </section>
+              <div className={styles.habitGrid}>
+                {group.items.map((habit) => (
+                  <HabitCard
+                    key={habit.id}
+                    habit={habit}
+                    onToggle={handleToggle}
+                    onEdit={(id) => {
+                      setEditingHabitId(id)
+                      setIsEditModalOpen(true)
+                    }}
+                    onDetails={(id) => console.log('Go to details:', id)}
+                  />
+                ))}
+              </div>
+            </div>
+          ))
+        )}
+      </section>
 
-        {/* FAB for creation */}
-        <FAB onClick={() => setIsWizardOpen(true)} />
+      {/* FAB for creation */}
+      <FAB onClick={() => setIsWizardOpen(true)} />
 
-        <HabitWizard
-          isOpen={isWizardOpen}
-          onClose={() => setIsWizardOpen(false)}
-        />
+      <HabitWizard
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+      />
 
-        <EditHabitModal
-          isOpen={isEditModalOpen}
-          onClose={() => {
-            setIsEditModalOpen(false)
-            setEditingHabitId(null)
-          }}
-          habitId={editingHabitId}
-        />
+      <EditHabitModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setEditingHabitId(null)
+        }}
+        habitId={editingHabitId}
+      />
 
-        <MoodCheckinModal
-          isOpen={isMoodModalOpen}
-          onClose={handleMoodSkip}
-          onSelect={handleMoodSelect}
-          onDetailsSubmit={handleMoodDetailsSubmit}
-          onSkip={handleMoodSkip}
-        />
-      </div>
+      <MoodCheckinModal
+        isOpen={isMoodModalOpen}
+        onClose={handleMoodSkip}
+        onSelect={handleMoodSelect}
+        onDetailsSubmit={handleMoodDetailsSubmit}
+        onSkip={handleMoodSkip}
+      />
+    </div>
 
-      <style jsx global>{`
-        /* Global bounce animation for icons if needed */
-        @keyframes vora-bounce {
-          0%,
-          100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-5px);
-          }
-        }
-      `}</style>
-    </DashboardLayout>
   )
 }

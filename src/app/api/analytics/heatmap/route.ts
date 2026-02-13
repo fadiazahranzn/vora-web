@@ -36,6 +36,7 @@ export async function GET(req: NextRequest) {
                 userId,
                 // Habit must have been created before or during the month
                 createdAt: { lte: end },
+                deletedAt: undefined,
                 // And not deleted before the month started
                 OR: [
                     { deletedAt: null },
