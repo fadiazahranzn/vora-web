@@ -7,6 +7,7 @@ import { ToastProvider } from '@/components/ui/Toast'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import '../styles/globals.css'
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister'
+import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt'
 
 export const viewport: Viewport = {
   themeColor: '#7C5CFC',
@@ -70,6 +71,7 @@ export default async function RootLayout({
               <ToastProvider>
                 {children}
                 <ServiceWorkerRegister />
+                <PWAInstallPrompt />
               </ToastProvider>
             </ThemeProvider>
           </QueryProvider>

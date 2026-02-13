@@ -9,6 +9,8 @@ import { FAB } from '@/components/ui/FAB'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { TaskModal } from '@/components/features/tasks/TaskModal'
+import { SyncStatusBadge } from '@/components/ui/SyncStatusBadge'
+import { apiFetch } from '@/lib/api-client'
 import { Task } from '@/types/task'
 import styles from './page.module.css'
 
@@ -23,7 +25,7 @@ export default function TasksPage() {
     React.useEffect(() => {
         // Run auto-postpone on page load (STORY-007)
         if (!hasPostponed) {
-            fetch('/api/tasks/auto-postpone', { method: 'POST' })
+            apiFetch('/api/tasks/auto-postpone', { method: 'POST' })
                 .then(res => res.json())
                 .then(data => {
                     if (data.postponedCount > 0) {
@@ -50,7 +52,7 @@ export default function TasksPage() {
         mutationFn: async ({ id, completed }: { id: string; completed: boolean }) => {
             // Artificial delay to ensure 400ms animation is visible (BR-084)
             await new Promise(resolve => setTimeout(resolve, 450))
-            const res = await fetch(`/api/tasks/${id}`, {
+            const res = await apiFetch(`/api/tasks/${id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ completedAt: completed ? new Date().toISOString() : null }),
@@ -112,7 +114,10 @@ export default function TasksPage() {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1>Tasks</h1>
+                <h1>
+                    Tasks
+                    <SyncStatusBadge />
+                </h1>
                 <p className={styles.subtitle}>Streamline your productivity</p>
             </header>
 

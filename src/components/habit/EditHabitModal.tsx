@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { updateHabitSchema } from '@/lib/validations/habit'
+import { apiFetch } from '@/lib/api-client'
 import styles from './EditHabitModal.module.css'
 
 const COLORS = [
@@ -117,7 +118,7 @@ export const EditHabitModal: React.FC<EditHabitModalProps> = ({
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await fetch(`/api/habits/${habitId}`, {
+      const res = await apiFetch(`/api/habits/${habitId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -138,7 +139,7 @@ export const EditHabitModal: React.FC<EditHabitModalProps> = ({
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch(`/api/habits/${habitId}`, {
+      const res = await apiFetch(`/api/habits/${habitId}`, {
         method: 'DELETE',
       })
       if (!res.ok) throw new Error('Failed to delete habit')

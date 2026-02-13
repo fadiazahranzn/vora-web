@@ -11,6 +11,7 @@ import {
 import { Modal } from '@/components/ui/Modal'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { apiFetch } from '@/lib/api-client'
 import { clsx } from 'clsx'
 import { Trash2, AlertCircle } from 'lucide-react'
 
@@ -109,7 +110,7 @@ export function CategoryModal({
         ? `/api/categories/${category.id}`
         : '/api/categories'
       const method = isEditing ? 'PATCH' : 'POST'
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -127,7 +128,7 @@ export function CategoryModal({
   const deleteMutation = useMutation({
     mutationFn: async () => {
       if (!category) return
-      const res = await fetch(`/api/categories/${category.id}`, {
+      const res = await apiFetch(`/api/categories/${category.id}`, {
         method: 'DELETE',
       })
       const result = await res.json()

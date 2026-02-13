@@ -1,0 +1,62 @@
+.badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--warning-surface, #fff7ed);
+    color: var(--warning-main, #ea580c);
+    border: 1px solid var(--warning-border, #fed7aa);
+    padding: 4px 8px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+    animation: slideIn 0.3s ease-out;
+    cursor: help;
+}
+
+.syncing {
+    background: var(--primary-surface, #eff6ff);
+    color: var(--primary-main, #2563eb);
+    border-color: var(--primary-border, #bfdbfe);
+}
+
+.count {
+    line-height: 1;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Dark mode overrides if design system tokens are available */
+:global([data-theme='dark']) .badge {
+    background: rgba(234, 88, 12, 0.1);
+    border-color: rgba(234, 88, 12, 0.3);
+}
+
+:global([data-theme='dark']) .syncing {
+    background: rgba(37, 99, 235, 0.1);
+    border-color: rgba(37, 99, 235, 0.3);
+}

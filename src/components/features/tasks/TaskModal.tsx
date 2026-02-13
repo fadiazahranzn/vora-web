@@ -5,6 +5,8 @@ import React from 'react'
 import { Modal } from '@/components/ui/Modal'
 import { TaskForm } from './TaskForm'
 import { Task } from '@/types/task'
+import { apiFetch } from '@/lib/api-client'
+import { useToast } from '@/components/ui/Toast'
 
 interface TaskModalProps {
     isOpen: boolean
@@ -19,6 +21,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     taskToEdit,
     onSuccess,
 }) => {
+    const { showToast } = useToast()
+
     const handleSubmit = async (data: any, scope?: 'this' | 'future') => {
         try {
             const tempId = taskToEdit?.id;
@@ -31,7 +35,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             // We can also use query param.
             const query = scope ? `?scope=${scope}` : '';
 
-            const res = await fetch(url + query, {
+            const res = await apiFetch(url + query, {
                 method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,8 +52,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
             onClose();
         } catch (error) {
             console.error('Failed to save task:', error);
-            // In a real app, show toast here
-            alert('Failed to save task: ' + (error as Error).message);
+            showToast('Failed to save task: ' + (error as Error).message, 'error');
         }
     }
 

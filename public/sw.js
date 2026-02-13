@@ -15,6 +15,7 @@ if (workbox) {
     // Pre-cache core assets (BR-140)
     workbox.precaching.precacheAndRoute([
         { url: '/', revision: CACHE_VERSION },
+        { url: '/offline', revision: CACHE_VERSION },
         { url: '/manifest.json', revision: CACHE_VERSION },
         { url: '/icons/apple-icon-180.png', revision: CACHE_VERSION },
         { url: '/icons/favicon-196.png', revision: CACHE_VERSION },
@@ -81,6 +82,15 @@ if (workbox) {
         })
     );
 
+    // Set offline fallback (BR-142)
+    workbox.routing.setCatchHandler(async ({ event }) => {
+        if (event.request.mode === 'navigate') {
+            const offlineKey = workbox.precaching.getCacheKeyForURL('/offline');
+            return (await caches.match(offlineKey)) || Response.error();
+        }
+        return Response.error();
+    });
+
     // 5. Other local assets (fonts, icons): Cache First
     workbox.routing.registerRoute(
         ({ url }) => url.origin === self.location.origin &&
@@ -113,10 +123,131 @@ if (workbox) {
         );
     });
 
-    // Skip waiting to ensure sw takes control immediately
+    // --- Background Sync Logic (STORY-004) ---
+    const DB_NAME = 'vora-sync-queue';
+    const STORE_NAME = 'requests';
+
+    async function openSyncDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, 1);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                }
+            };
+        });
+    }
+
+    async function getQueuedRequests() {
+        const db = await openSyncDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readonly');
+            const store = tx.objectStore(STORE_NAME);
+            const request = store.getAll();
+            request.onsuccess = () => {
+                const results = request.result;
+                results.sort((a, b) => a.timestamp - b.timestamp);
+                resolve(results);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function removeFromSyncQueue(id) {
+        const db = await openSyncDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            const request = store.delete(id);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function updateSyncRetryCount(id, count) {
+        const db = await openSyncDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            const store = tx.objectStore(STORE_NAME);
+            const getReq = store.get(id);
+            getReq.onsuccess = () => {
+                const data = getReq.result;
+                data.retryCount = count;
+                store.put(data).onsuccess = () => resolve();
+            };
+            getReq.onerror = () => reject(getReq.error);
+        });
+    }
+
+    async function replaySyncQueue() {
+        const requests = await getQueuedRequests();
+        console.log(`Replaying ${requests.length} queued requests...`);
+
+        for (const req of requests) {
+            try {
+                const response = await fetch(req.url, {
+                    method: req.method,
+                    headers: req.headers,
+                    body: req.body,
+                });
+
+                if (response.ok || response.status === 409) {
+                    // Success or Conflict (Conflict handled as per BR-144/last-write-wins)
+                    // If 409, server has a newer version, so we discard our older change.
+                    await removeFromSyncQueue(req.id);
+                } else {
+                    // Retry logic (up to 3 times)
+                    if (req.retryCount < 3) {
+                        await updateSyncRetryCount(req.id, req.retryCount + 1);
+                    } else {
+                        console.error('Max retries reached for request:', req.id);
+                        await removeFromSyncQueue(req.id); // Or move to a "failed" store
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to replay request:', req.id, error);
+                // Keep in queue for next sync attempt if network error
+            }
+        }
+
+        // Notify clients that sync is complete
+        const clients = await self.clients.matchAll();
+        clients.forEach(client => {
+            client.postMessage({
+                type: 'SYNC_COMPLETED',
+                count: requests.length
+            });
+        });
+    }
+
+    // Handle Background Sync API
+    self.addEventListener('sync', (event) => {
+        if (event.tag === 'sync-mutations') {
+            event.waitUntil(replaySyncQueue());
+        }
+    });
+
+    // Handle online event fallback for browsers without Background Sync
     self.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'SKIP_WAITING') {
             self.skipWaiting();
+        }
+
+        if (event.data && event.data.type === 'SYNC_QUEUED') {
+            // Check if we should try replaying (if online)
+            event.waitUntil(replaySyncQueue());
+        }
+
+        if (event.data && event.data.type === 'GET_PENDING_COUNT') {
+            getQueuedRequests().then(requests => {
+                event.source.postMessage({
+                    type: 'PENDING_COUNT',
+                    count: requests.length
+                });
+            });
         }
     });
 } else {

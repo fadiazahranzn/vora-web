@@ -2,12 +2,13 @@ import React from 'react';
 import styles from './Button.module.css';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   iconOnly?: boolean;
+  fullWidth?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -20,6 +21,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     leftIcon,
     rightIcon,
     iconOnly = false,
+    fullWidth = false,
     disabled,
     ...props
   }, ref) => {
@@ -29,6 +31,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       styles[size],
       isLoading ? styles.loading : '',
       iconOnly ? styles.iconOnly : '',
+      fullWidth ? styles.fullWidth : '',
       className
     ].filter(Boolean).join(' ');
 

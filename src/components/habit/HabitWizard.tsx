@@ -10,6 +10,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { createHabitSchema } from '@/lib/validations/habit'
+import { apiFetch } from '@/lib/api-client'
 import styles from './HabitWizard.module.css'
 
 const COLORS = [
@@ -94,7 +95,7 @@ export const HabitWizard: React.FC<HabitWizardProps> = ({
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
-      const res = await fetch('/api/habits', {
+      const res = await apiFetch('/api/habits', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -298,7 +299,7 @@ export const HabitWizard: React.FC<HabitWizardProps> = ({
                             className={clsx(
                               styles.dateBtn,
                               monthlyDates.includes(date) &&
-                                styles.dateBtnSelected
+                              styles.dateBtnSelected
                             )}
                             onClick={() => {
                               const current = [...monthlyDates]

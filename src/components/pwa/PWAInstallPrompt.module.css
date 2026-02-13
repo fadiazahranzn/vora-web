@@ -1,0 +1,94 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    align-items: center;
+    text-align: center;
+}
+
+.mascotWrapper {
+    margin-top: -1rem;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--vora-color-text-primary);
+    margin: 0;
+}
+
+.description {
+    font-size: 1rem;
+    color: var(--vora-color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.installButton {
+    width: 100%;
+}
+
+.secondaryActions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.textButton {
+    background: none;
+    border: none;
+    color: var(--vora-color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.textButton:hover {
+    color: var(--vora-color-accent-primary);
+}
+
+.iosInstructions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+    width: 100%;
+    padding: 1rem;
+    background: var(--vora-color-bg-secondary);
+    border-radius: 1rem;
+}
+
+.iosStep {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--vora-color-text-primary);
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 4px;
+    padding: 2px;
+}

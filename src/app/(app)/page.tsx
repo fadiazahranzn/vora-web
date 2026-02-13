@@ -10,10 +10,12 @@ import { FAB } from '@/components/ui/FAB'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { DatePicker } from '@/components/ui/DatePicker'
+import { SyncStatusBadge } from '@/components/ui/SyncStatusBadge'
 import { HabitCard } from '@/components/habit/HabitCard'
 import { HabitWizard } from '@/components/habit/HabitWizard'
 import { EditHabitModal } from '@/components/habit/EditHabitModal'
 import { MoodCheckinModal, MoodType } from '@/components/mood/MoodCheckinModal'
+import { apiFetch } from '@/lib/api-client'
 import styles from './page.module.css'
 
 interface Category {
@@ -49,7 +51,7 @@ export default function Home() {
     setSelectedDate(new Date())
 
     // Run auto-postpone on entry (STORY-007)
-    fetch('/api/tasks/auto-postpone', { method: 'POST' }).catch((err) =>
+    apiFetch('/api/tasks/auto-postpone', { method: 'POST' }).catch((err) =>
       console.error('Auto-postpone error:', err)
     )
   }, [])
@@ -99,7 +101,7 @@ export default function Home() {
       const method = completed ? 'POST' : 'DELETE'
       const url = `/api/habits/${id}/complete${!completed ? `?date=${formattedDate}` : ''}`
 
-      const res = await fetch(url, {
+      const res = await apiFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: completed ? JSON.stringify({ date: formattedDate }) : undefined,
@@ -154,7 +156,7 @@ export default function Home() {
       reflection?: string
       activity?: string
     }) => {
-      const res = await fetch('/api/mood-checkins', {
+      const res = await apiFetch('/api/mood-checkins', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -257,6 +259,7 @@ export default function Home() {
         <div className={styles.welcomeText}>
           <h1>
             {greeting}, {session?.user?.name || 'Voran'}! ✨
+            <SyncStatusBadge />
           </h1>
           <p>Ready to crush your goals today?</p>
           <div className={styles.progressSection}>
