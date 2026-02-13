@@ -8,6 +8,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext'
 import '../styles/globals.css'
 import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister'
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt'
+import { headers } from 'next/headers'
 
 export const viewport: Viewport = {
   themeColor: '#7C5CFC',
@@ -43,11 +44,13 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const session = await auth()
+  const nonce = (await headers()).get('x-nonce') || ''
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `
             (function() {
