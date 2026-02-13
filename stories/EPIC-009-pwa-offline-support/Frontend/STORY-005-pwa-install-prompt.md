@@ -66,11 +66,11 @@ THEN the install prompt does not appear
 - **External Dependencies:** None
 
 ## Definition of Done
-- [ ] Custom install banner appears after 2+ sessions
-- [ ] "Install" triggers native dialog
-- [ ] Success toast on install
-- [ ] "Not now" delays 7 days
-- [ ] "Don't show again" permanently dismisses
-- [ ] Banner doesn't show if already installed
-- [ ] iOS fallback instructions displayed
-- [ ] Code merged to main branch
+- [x] Custom install banner appears after 2+ sessions
+- [x] "Install" triggers native dialog
+- [x] Success toast on install
+- [x] "Not now" delays 7 days
+- [x] "Don't show again" permanently dismisses
+- [x] Banner doesn't show if already installed
+- [x] iOS fallback instructions displayed
+- [x] Code merged to main branch
