@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import { authConfig } from './auth.config'
 import { NextResponse } from 'next/server'
 import { checkRateLimit, RateLimitType } from './lib/ratelimit'
+import { requiresCsrfValidation } from './lib/csrf'
 
 const { auth } = NextAuth(authConfig)
 
@@ -100,6 +101,28 @@ export default auth(async (req) => {
     req.headers.set('x-ratelimit-limit', result.limit.toString())
     req.headers.set('x-ratelimit-remaining', result.remaining.toString())
     req.headers.set('x-ratelimit-reset', result.reset.toString())
+  }
+
+  // CSRF Protection for API Routes
+  if (isApiRoute && requiresCsrfValidation(req.method)) {
+    const csrfToken = req.headers.get('x-csrf-token')
+
+    // Skip CSRF for auth routes (login/register) as they don't have tokens yet
+    const isAuthEndpoint = nextUrl.pathname.startsWith('/api/auth')
+
+    if (!isAuthEndpoint && !csrfToken) {
+      const response = new NextResponse(
+        JSON.stringify({ error: 'Invalid CSRF token' }),
+        {
+          status: 403,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      setSecurityHeaders(response)
+      return response
+    }
   }
 
   const requestHeaders = new Headers(req.headers)

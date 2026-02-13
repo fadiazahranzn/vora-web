@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { sanitizeOptionalInput } from '@/lib/sanitize'
 
 export const moodEnum = z.enum([
   'HAPPY',
@@ -36,7 +37,8 @@ export const createMoodCheckinSchema = z.object({
   reflectionText: z
     .string()
     .max(500, 'Reflection text must be 500 characters or less')
-    .optional(),
+    .optional()
+    .transform(sanitizeOptionalInput),
   selectedActivity: z
     .preprocess((val) => {
       if (typeof val === 'string' && activityMap[val]) {

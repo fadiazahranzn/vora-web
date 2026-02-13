@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { sanitizeTransform, sanitizeOptionalInput } from '@/lib/sanitize'
 
 export const habitFrequencySchema = z.enum(['DAILY', 'WEEKLY', 'MONTHLY'])
 
@@ -7,12 +8,13 @@ export const createHabitSchema = z
     name: z
       .string()
       .min(1, 'Name is required')
-      .max(100, 'Name max 100 characters'),
+      .max(100, 'Name max 100 characters')
+      .transform(sanitizeTransform),
     categoryId: z.string().uuid('Invalid category'),
     color: z.string().min(1, 'Color is required'),
     frequency: habitFrequencySchema,
     targetValue: z.number().int().positive().optional(),
-    targetUnit: z.string().optional(),
+    targetUnit: z.string().optional().transform(sanitizeOptionalInput),
     weeklyDays: z.array(z.number().int().min(0).max(6)).optional(),
     monthlyDates: z.array(z.number().int().min(1).max(31)).optional(),
     reminderTime: z.string().optional(),
@@ -54,11 +56,12 @@ export const updateHabitSchema = z.object({
     .string()
     .min(1, 'Name is required')
     .max(100, 'Name max 100 characters')
+    .transform(sanitizeTransform)
     .optional(),
   categoryId: z.string().uuid('Invalid category').optional(),
   color: z.string().min(1, 'Color is required').optional(),
   targetValue: z.number().int().positive().optional(),
-  targetUnit: z.string().optional(),
+  targetUnit: z.string().optional().transform(sanitizeOptionalInput),
   weeklyDays: z.array(z.number().int().min(0).max(6)).optional(),
   monthlyDates: z.array(z.number().int().min(1).max(31)).optional(),
   reminderTime: z.string().optional(),

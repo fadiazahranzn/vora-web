@@ -42,6 +42,7 @@
     "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
+    "csrf-csrf": "^4.0.3",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.563.0",
     "next": "16.1.6",
@@ -52,6 +53,7 @@
     "react-hook-form": "^7.71.1",
     "recharts": "^3.7.0",
     "tailwind-merge": "^3.4.0",
+    "xss": "^1.0.15",
     "zod": "^4.3.6"
   },
   "devDependencies": {
