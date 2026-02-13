@@ -6,6 +6,7 @@ import QueryProvider from '@/components/providers/QueryProvider'
 import { ToastProvider } from '@/components/ui/Toast'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import '../styles/globals.css'
+import ServiceWorkerRegister from '@/components/pwa/ServiceWorkerRegister'
 
 export const viewport: Viewport = {
   themeColor: '#7C5CFC',
@@ -66,7 +67,10 @@ export default async function RootLayout({
         <SessionProvider session={session}>
           <QueryProvider>
             <ThemeProvider>
-              <ToastProvider>{children}</ToastProvider>
+              <ToastProvider>
+                {children}
+                <ServiceWorkerRegister />
+              </ToastProvider>
             </ThemeProvider>
           </QueryProvider>
         </SessionProvider>
