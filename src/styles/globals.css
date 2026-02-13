@@ -180,8 +180,7 @@ body {
   line-height: var(--vora-line-height-relaxed);
   color: var(--vora-color-text-primary);
   background-color: var(--vora-color-bg-primary);
-  transition: background-color var(--vora-duration-normal) var(--vora-easing-default),
-    color var(--vora-duration-normal) var(--vora-easing-default);
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 /* ── Headings ── */
