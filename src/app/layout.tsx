@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { auth } from '@/auth'
 import SessionProvider from '@/components/auth/SessionProvider'
@@ -6,6 +6,12 @@ import QueryProvider from '@/components/providers/QueryProvider'
 import { ToastProvider } from '@/components/ui/Toast'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import '../styles/globals.css'
+
+export const viewport: Viewport = {
+  themeColor: '#7C5CFC',
+  width: 'device-width',
+  initialScale: 1,
+}
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,6 +21,18 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Vora Web App',
   description: 'Track your goals and habits',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Vora',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    apple: '/icons/apple-icon-180.png',
+  },
 }
 
 export default async function RootLayout({
