@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ThemeSwitcher > snapshots > matches system-active snapshot 1`] = `
+<div
+  aria-label="Theme preference"
+  class="container"
+  role="radiogroup"
+>
+  <button
+    aria-checked="false"
+    class="option"
+    role="radio"
+    title="Light"
+  >
+    <svg
+      data-testid="sun-icon"
+      height="16"
+      width="16"
+    />
+    <span
+      class="srOnly"
+    >
+      Light
+    </span>
+  </button>
+  <button
+    aria-checked="false"
+    class="option"
+    role="radio"
+    title="Dark"
+  >
+    <svg
+      data-testid="moon-icon"
+      height="16"
+      width="16"
+    />
+    <span
+      class="srOnly"
+    >
+      Dark
+    </span>
+  </button>
+  <button
+    aria-checked="true"
+    class="option active"
+    role="radio"
+    title="System"
+  >
+    <svg
+      data-testid="monitor-icon"
+      height="16"
+      width="16"
+    />
+    <span
+      class="srOnly"
+    >
+      System
+    </span>
+  </button>
+</div>
+`;

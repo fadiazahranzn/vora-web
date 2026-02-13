@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Input > snapshots > matches default input snapshot 1`] = `
+<div
+  class="container"
+>
+  <label
+    class="label"
+    for="_r_j_"
+  >
+    Name
+  </label>
+  <div
+    class="inputWrapper"
+  >
+    <input
+      aria-invalid="false"
+      class="input"
+      id="_r_j_"
+      placeholder="Enter"
+    />
+  </div>
+</div>
+`;
+
+exports[`Input > snapshots > matches error state snapshot 1`] = `
+<div
+  class="container"
+>
+  <label
+    class="label"
+    for="_r_k_"
+  >
+    Email
+  </label>
+  <div
+    class="inputWrapper"
+  >
+    <input
+      aria-describedby="_r_k_-error"
+      aria-invalid="true"
+      class="input error"
+      id="_r_k_"
+    />
+  </div>
+  <span
+    class="errorText"
+    id="_r_k_-error"
+    role="alert"
+  >
+    Required
+  </span>
+</div>
+`;

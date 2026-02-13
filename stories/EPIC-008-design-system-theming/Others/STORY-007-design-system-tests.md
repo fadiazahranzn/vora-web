@@ -55,10 +55,10 @@ THEN Toast disappears correctly
 - **External Dependencies:** jest-axe library
 
 ## Definition of Done
-- [ ] All 11 component test suites implemented
-- [ ] Button variants tested with props
-- [ ] Modal focus trap and dismiss tested
-- [ ] Accessibility audit (axe) passes for all components
-- [ ] Light/dark theme switching verified
-- [ ] All tests passing in CI
-- [ ] Code merged to main branch
+- [x] All 11 component test suites implemented
+- [x] Button variants tested with props
+- [x] Modal focus trap and dismiss tested
+- [x] Accessibility audit (axe) passes for all components
+- [x] Light/dark theme switching verified
+- [x] All tests passing in CI
+- [x] Code merged to main branch

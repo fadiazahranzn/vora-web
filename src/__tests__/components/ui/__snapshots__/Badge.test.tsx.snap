@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Badge > snapshots > matches neutral variant snapshot 1`] = `
+<span
+  class="badge neutral"
+>
+  Default
+</span>
+`;
+
+exports[`Badge > snapshots > matches success variant snapshot 1`] = `
+<span
+  class="badge success"
+>
+  Success
+</span>
+`;

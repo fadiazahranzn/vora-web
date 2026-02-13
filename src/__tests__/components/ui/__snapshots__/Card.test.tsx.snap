@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card > snapshots > matches elevated variant snapshot 1`] = `
+<div
+  class="card elevated p-lg"
+>
+  Elevated
+</div>
+`;
+
+exports[`Card > snapshots > matches standard variant snapshot 1`] = `
+<div
+  class="card standard p-md"
+>
+  Standard Content
+</div>
+`;

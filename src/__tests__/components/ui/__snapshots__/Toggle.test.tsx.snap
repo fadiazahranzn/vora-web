@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Toggle > snapshots > matches checked snapshot 1`] = `
+<label
+  class="label "
+  for="_r_h_"
+>
+  <input
+    aria-checked="true"
+    checked=""
+    class="input"
+    id="_r_h_"
+    role="switch"
+    type="checkbox"
+  />
+  <span
+    class="switch checked"
+  >
+    <span
+      class="thumb"
+    />
+  </span>
+  <span>
+    On
+  </span>
+</label>
+`;
+
+exports[`Toggle > snapshots > matches unchecked snapshot 1`] = `
+<label
+  class="label "
+  for="_r_g_"
+>
+  <input
+    aria-checked="false"
+    class="input"
+    id="_r_g_"
+    role="switch"
+    type="checkbox"
+  />
+  <span
+    class="switch "
+  >
+    <span
+      class="thumb"
+    />
+  </span>
+  <span>
+    Off
+  </span>
+</label>
+`;

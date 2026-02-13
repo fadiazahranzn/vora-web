@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProgressBar > snapshots > matches basic progress bar snapshot 1`] = `
+<div
+  class=""
+>
+  <div
+    class="container"
+  >
+    <div
+      aria-label="Progress: 50%"
+      aria-valuemax="100"
+      aria-valuemin="0"
+      aria-valuenow="50"
+      class="bar"
+      role="progressbar"
+      style="width: 50%;"
+    />
+  </div>
+</div>
+`;
+
+exports[`ProgressBar > snapshots > matches full-featured progress bar snapshot 1`] = `
+<div
+  class=""
+>
+  <div
+    class="label"
+  >
+    <span>
+      Upload
+    </span>
+    <span>
+      80
+      %
+    </span>
+  </div>
+  <div
+    class="container"
+  >
+    <div
+      aria-label="Upload: 80%"
+      aria-valuemax="100"
+      aria-valuemin="0"
+      aria-valuenow="80"
+      class="bar"
+      role="progressbar"
+      style="width: 80%;"
+    />
+  </div>
+</div>
+`;

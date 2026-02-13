@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Button > snapshots > matches icon-only snapshot 1`] = `
+<button
+  aria-busy="false"
+  aria-label="Add"
+  class="button primary md iconOnly"
+>
+  +
+</button>
+`;
+
+exports[`Button > snapshots > matches loading state snapshot 1`] = `
+<button
+  aria-busy="true"
+  class="button primary md loading"
+  disabled=""
+>
+  <span
+    aria-label="Loading"
+    class="spinner"
+    role="status"
+  />
+</button>
+`;
+
+exports[`Button > snapshots > matches primary variant snapshot 1`] = `
+<button
+  aria-busy="false"
+  class="button primary md"
+>
+  <span
+    class="content"
+  >
+    Primary
+  </span>
+</button>
+`;

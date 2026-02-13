@@ -36,6 +36,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           aria-valuenow={value}
           aria-valuemin={0}
           aria-valuemax={max}
+          aria-label={`${label || 'Progress'}: ${Math.round(percentage)}%`}
         />
       </div>
     </div>

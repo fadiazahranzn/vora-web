@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BottomSheet > snapshots > matches open sheet snapshot 1`] = `
+<body
+  style="overflow: hidden;"
+>
+  <div />
+  <div
+    class="overlay"
+  >
+    <div
+      aria-labelledby="sheet-title"
+      aria-modal="true"
+      class="sheet"
+      role="dialog"
+    >
+      <div
+        class="handle"
+      />
+      <div
+        class="header"
+      >
+        <h2
+          class="title"
+          id="sheet-title"
+        >
+          Sheet Title
+        </h2>
+        <button
+          aria-label="Close sheet"
+          class="closeButton"
+          style="background: none; border: medium; font-size: 1.25rem; padding: 0.5rem;"
+        >
+          ×
+        </button>
+      </div>
+      <div
+        class="body"
+      >
+        <p>
+          Sheet content
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+`;

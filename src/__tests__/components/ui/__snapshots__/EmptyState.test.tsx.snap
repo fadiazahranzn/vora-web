@@ -1,0 +1,73 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EmptyState > snapshots > matches basic empty state snapshot 1`] = `
+<div
+  class="container "
+>
+  <div
+    aria-hidden="true"
+    class="mascot"
+  >
+    <div
+      data-expression="happy"
+      data-size="120"
+      data-testid="mascot"
+    >
+      Mascot
+    </div>
+  </div>
+  <h3
+    class="title"
+  >
+    No items yet
+  </h3>
+  <p
+    class="description"
+  >
+    Start by adding your first item
+  </p>
+</div>
+`;
+
+exports[`EmptyState > snapshots > matches empty state with action snapshot 1`] = `
+<div
+  class="container "
+>
+  <div
+    aria-hidden="true"
+    class="mascot"
+  >
+    <div
+      data-expression="pointing"
+      data-size="120"
+      data-testid="mascot"
+    >
+      Mascot
+    </div>
+  </div>
+  <h3
+    class="title"
+  >
+    No items yet
+  </h3>
+  <p
+    class="description"
+  >
+    Start by adding your first item
+  </p>
+  <div
+    class="action"
+  >
+    <button
+      aria-busy="false"
+      class="button primary md"
+    >
+      <span
+        class="content"
+      >
+        Add Habit
+      </span>
+    </button>
+  </div>
+</div>
+`;
