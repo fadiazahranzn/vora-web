@@ -55,11 +55,11 @@ THEN correct results are returned
 - **External Dependencies:** Testing framework from EPIC-001
 
 ## Definition of Done
-- [ ] CRUD API tests for all operations
-- [ ] Sub-task auto-complete tests
-- [ ] Auto-postpone engine tests with edge cases
-- [ ] Recurrence generator tests for all types
-- [ ] Filter and sort combination tests
-- [ ] Frontend component tests
-- [ ] All tests passing in CI
+- [x] CRUD API tests for all operations
+- [x] Sub-task auto-complete tests
+- [x] Auto-postpone engine tests with edge cases
+- [x] Recurrence generator tests for all types
+- [x] Filter and sort combination tests
+- [x] Frontend component tests
+- [x] All tests passing in CI
 - [ ] Code merged to main branch

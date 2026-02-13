@@ -1,0 +1,250 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+}
+
+.col {
+    flex: 1;
+}
+
+.priorityGroup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.priorityOption {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.priorityOption:hover {
+    background: var(--bg-hover);
+}
+
+.priorityOption[data-selected="true"] {
+    border-color: currentColor;
+    background: var(--bg-surface);
+    box-shadow: 0 0 0 1px currentColor;
+}
+
+.priorityDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.high {
+    color: #EF4444;
+}
+
+.medium {
+    color: #F59E0B;
+}
+
+.low {
+    color: #3B82F6;
+}
+
+.recurrenceSelect {
+    width: 100%;
+    padding: 0.625rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.toggleGroup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.toggleLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.toggleSwitch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: var(--gray-300);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.toggleSwitch[data-checked="true"] {
+    background: var(--primary);
+}
+
+.toggleThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.toggleSwitch[data-checked="true"] .toggleThumb {
+    transform: translateX(20px);
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* Prompt Overlay */
+.promptOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    padding: 2rem;
+    text-align: center;
+    backdrop-filter: blur(2px);
+}
+
+.promptTitle {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.promptText {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+.promptActions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+/* Sub-tasks */
+.subTaskList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.subTaskRow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.subTaskCheckbox {
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.subTaskCheckbox:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.subTaskCheckbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    width: 40%;
+    height: 25%;
+    border: 2px solid white;
+    border-top: 0;
+    border-right: 0;
+    transform: translate(-50%, -60%) rotate(-45deg);
+}
+
+.subTaskInput {
+    flex: 1;
+}
+
+.removeBtn {
+    color: var(--text-tertiary);
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.removeBtn:hover {
+    color: var(--danger);
+    background: var(--danger-light);
+}
+
+.addSubTaskBtn {
+    margin-top: 0.5rem;
+}
+
+.titleCompleted {
+    text-decoration: line-through;
+    color: var(--text-tertiary);
+}

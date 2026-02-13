@@ -4,7 +4,8 @@ import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
-import { Layers, Plus, Settings2, GripVertical } from 'lucide-react'
+import { Layers, Plus, Settings2, GripVertical, LayoutDashboard, CheckSquare } from 'lucide-react'
+import Link from 'next/link'
 import {
   DndContext,
   closestCenter,
@@ -229,12 +230,42 @@ export default function CategorySidebar({
       </div>
 
       <nav className={styles.nav}>
+        <div className={styles.navSection}>
+          <Link
+            href="/"
+            className={clsx(
+              styles.item,
+              pathname === '/' && styles.itemActive
+            )}
+          >
+            <div className={styles.iconWrapper}>
+              <LayoutDashboard size={18} />
+            </div>
+            <span className={styles.name}>Dashboard</span>
+          </Link>
+
+          <Link
+            href="/tasks"
+            className={clsx(
+              styles.item,
+              pathname === '/tasks' && styles.itemActive
+            )}
+          >
+            <div className={styles.iconWrapper}>
+              <CheckSquare size={18} />
+            </div>
+            <span className={styles.name}>Tasks</span>
+          </Link>
+        </div>
+
+        <div className={styles.navDivider} />
+
         <button
           onClick={(e) => handleCategorySelect('all', e)}
           className={clsx(
             styles.item,
             styles.allHabitsBtn,
-            activeCategoryId === 'all' && styles.itemActive
+            pathname === '/' && activeCategoryId === 'all' && styles.itemActive
           )}
         >
           <div className={styles.iconWrapper}>

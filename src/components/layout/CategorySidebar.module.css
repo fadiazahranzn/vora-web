@@ -215,3 +215,17 @@
     box-shadow: var(--vora-shadow-lg);
     opacity: 0.9;
 }
+
+.navSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-1);
+    margin-bottom: var(--vora-space-2);
+}
+
+.navDivider {
+    height: 1px;
+    background: var(--vora-color-border-default);
+    margin: var(--vora-space-2) 0;
+    opacity: 0.5;
+}

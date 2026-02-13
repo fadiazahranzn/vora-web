@@ -70,11 +70,21 @@ export const HabitCard: React.FC<HabitCardProps> = ({
 
         {/* Checkbox */}
         <div
+          role="checkbox"
+          aria-checked={habit.isCompleted}
+          aria-label={`Mark ${habit.name} as ${habit.isCompleted ? 'incomplete' : 'complete'}`}
+          tabIndex={0}
           className={clsx(
             styles.checkbox,
             habit.isCompleted && styles.checkboxChecked
           )}
           onClick={handleToggle}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              handleToggle(e as any)
+            }
+          }}
         >
           <Check size={16} strokeWidth={3} />
         </div>

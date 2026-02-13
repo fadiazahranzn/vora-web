@@ -50,9 +50,13 @@ export async function POST(req: Request) {
     const validatedData = createMoodCheckinSchema.parse(body)
 
     const date = startOfDay(new Date(validatedData.date))
+
+    // Determine isPositive based on mood
+    // BR-061: happy/proud = true, others = false
     const isPositive = ['HAPPY', 'PROUD'].includes(validatedData.mood)
 
     // 1. Find the completion first
+    // We need a completion to exist to link the mood check-in.
     const completion = await prisma.habitCompletion.findFirst({
       where: {
         habitId: validatedData.habitId,
@@ -70,6 +74,7 @@ export async function POST(req: Request) {
     }
 
     // 2. Upsert mood check-in
+    // If it exists for this habit/date, update it. Otherwise create.
     const moodCheckin = await prisma.moodCheckin.upsert({
       where: {
         habitId_date: {
@@ -81,8 +86,10 @@ export async function POST(req: Request) {
         mood: validatedData.mood as Mood,
         isPositive,
         reflectionText: validatedData.reflectionText || null,
+        // validatedData.selectedActivity is already transformed to Enum value by Zod or null/undefined
         selectedActivity: (validatedData.selectedActivity as Activity) || null,
         deletedAt: null, // Restore if it was soft-deleted
+        completionId: completion.id, // Ensure it's linked to the correct completion (should be same)
       },
       create: {
         userId,

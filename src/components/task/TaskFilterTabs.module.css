@@ -1,0 +1,45 @@
+.scrollContainer {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+    margin-bottom: var(--vora-space-6);
+    border-bottom: 1px solid var(--vora-color-border-default);
+}
+
+.scrollContainer::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.tabs {
+    display: flex;
+    gap: var(--vora-space-2);
+    padding: 0 var(--vora-space-1);
+}
+
+.tab {
+    padding: var(--vora-space-3) var(--vora-space-4);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-family: var(--vora-font-family);
+    font-size: var(--vora-font-size-body);
+    font-weight: var(--vora-font-weight-medium);
+    color: var(--vora-color-text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--vora-duration-fast);
+}
+
+.tab:hover {
+    color: var(--vora-color-text-primary);
+}
+
+.tabActive {
+    color: var(--vora-color-accent-primary);
+    border-bottom-color: var(--vora-color-accent-primary);
+    font-weight: var(--vora-font-weight-bold);
+}

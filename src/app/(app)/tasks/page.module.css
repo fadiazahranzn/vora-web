@@ -1,0 +1,50 @@
+.container {
+    padding-bottom: var(--vora-space-16);
+}
+
+.header {
+    margin-bottom: var(--vora-space-6);
+}
+
+.header h1 {
+    font-size: var(--vora-font-size-display);
+    font-weight: var(--vora-font-weight-bold);
+    color: var(--vora-color-text-primary);
+    margin-bottom: var(--vora-space-1);
+}
+
+.subtitle {
+    color: var(--vora-color-text-secondary);
+    font-size: var(--vora-font-size-body);
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--vora-space-2);
+}
+
+.stats {
+    font-size: var(--vora-font-size-caption);
+    color: var(--vora-color-text-secondary);
+    font-weight: var(--vora-font-weight-medium);
+}
+
+.taskList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-3);
+    margin-top: var(--vora-space-2);
+}
+
+.loadingGrid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-4);
+}
+
+.skeletonCard {
+    height: 80px;
+    width: 100%;
+}

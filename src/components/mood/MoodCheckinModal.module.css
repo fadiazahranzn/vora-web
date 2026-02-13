@@ -2,21 +2,17 @@
     display: flex;
     flex-direction: column;
     gap: var(--vora-space-6);
-    padding: var(--vora-space-4) 0;
+    padding: var(--vora-space-2) 0;
     align-items: center;
     text-align: center;
-}
-
-.title {
-    font-size: var(--vora-font-size-h2);
-    font-weight: var(--vora-font-weight-bold);
-    color: var(--vora-color-text-primary);
 }
 
 .subtitle {
     font-size: var(--vora-font-size-body);
     color: var(--vora-color-text-secondary);
-    max-width: 250px;
+    max-width: 80%;
+    margin: 0 auto;
+    line-height: var(--vora-line-height-normal);
 }
 
 .moodGrid {
@@ -30,6 +26,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: var(--vora-space-2);
     padding: var(--vora-space-4);
     background: var(--vora-color-bg-secondary);
@@ -37,11 +34,24 @@
     border-radius: var(--vora-radius-lg);
     cursor: pointer;
     transition: all var(--vora-duration-fast) var(--vora-easing-default);
+
+    /* Button reset */
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    color: inherit;
 }
 
-.moodItem:hover {
+.moodItem:hover,
+.moodItem:focus-visible {
     transform: translateY(-4px);
     background: var(--vora-color-bg-tertiary);
+}
+
+.moodItem:focus-visible {
+    border-color: var(--vora-color-border-focus);
+    box-shadow: 0 0 0 2px var(--vora-color-active-subtle);
 }
 
 .moodItemActive {
@@ -52,6 +62,7 @@
 
 .emoji {
     font-size: 32px;
+    line-height: 1;
 }
 
 .moodLabel {
@@ -66,7 +77,7 @@
     justify-content: center;
     gap: var(--vora-space-4);
     width: 100%;
-    margin-top: var(--vora-space-4);
+    margin-top: var(--vora-space-2);
 }
 
 .skipBtn {
@@ -76,8 +87,174 @@
     border: none;
     cursor: pointer;
     text-decoration: underline;
+    padding: var(--vora-space-2);
+    border-radius: var(--vora-radius-sm);
+    transition: color var(--vora-duration-fast);
 }
 
 .skipBtn:hover {
     color: var(--vora-color-text-secondary);
+}
+
+.skipBtn:focus-visible {
+    outline: 2px solid var(--vora-color-border-focus);
+    text-decoration: none;
+}
+
+/* Celebration View */
+.celebrationContent,
+.supportContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vora-space-6);
+    padding: var(--vora-space-4) 0;
+    text-align: center;
+    animation: fadeIn var(--vora-duration-normal) var(--vora-easing-decelerate);
+}
+
+.mascotWrapper {
+    position: relative;
+    animation: bounce 1s infinite alternate cubic-bezier(0.36, 0, 0.66, -0.56);
+}
+
+.congratsMessage,
+.supportMessage {
+    font-size: var(--vora-font-size-h2);
+    font-weight: var(--vora-font-weight-bold);
+    color: var(--vora-color-accent-primary);
+    line-height: var(--vora-line-height-tight);
+    max-width: 80%;
+}
+
+.supportMessage {
+    color: var(--vora-color-text-primary);
+}
+
+/* Reflection View */
+.reflectionContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-4);
+    animation: fadeIn var(--vora-duration-normal) var(--vora-easing-decelerate);
+}
+
+.reflectionArea {
+    width: 100%;
+    min-height: 120px;
+    padding: var(--vora-space-3);
+    border: 1px solid var(--vora-color-border-default);
+    border-radius: var(--vora-radius-md);
+    font-family: inherit;
+    font-size: var(--vora-font-size-body);
+    color: var(--vora-color-text-primary);
+    background: var(--vora-color-bg-primary);
+    resize: none;
+    transition: border-color var(--vora-duration-fast);
+}
+
+.reflectionArea:focus {
+    outline: none;
+    border-color: var(--vora-color-border-focus);
+    box-shadow: 0 0 0 1px var(--vora-color-border-focus);
+}
+
+.charCounter {
+    text-align: right;
+    font-size: var(--vora-font-size-caption);
+    color: var(--vora-color-text-tertiary);
+    margin-top: calc(var(--vora-space-1) * -1);
+}
+
+.charCounter.limitReached {
+    color: var(--vora-color-error);
+}
+
+/* Activity Selection View */
+.activityContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vora-space-4);
+    animation: fadeIn var(--vora-duration-normal) var(--vora-easing-decelerate);
+}
+
+.activityGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--vora-space-3);
+    width: 100%;
+}
+
+.activityCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vora-space-2);
+    padding: var(--vora-space-4);
+    background: var(--vora-color-bg-secondary);
+    border: 2px solid transparent;
+    border-radius: var(--vora-radius-lg);
+    cursor: pointer;
+    transition: all var(--vora-duration-fast);
+    text-align: center;
+
+    /* Button reset */
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    color: inherit;
+}
+
+.activityCard:hover,
+.activityCard:focus-visible {
+    background: var(--vora-color-bg-tertiary);
+    transform: translateY(-2px);
+}
+
+.activityCardSelected {
+    border-color: var(--vora-color-accent-primary);
+    background: var(--vora-color-accent-subtle);
+    color: var(--vora-color-accent-pressed);
+}
+
+.activityIcon {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.activityLabel {
+    font-size: var(--vora-font-size-caption);
+    font-weight: var(--vora-font-weight-medium);
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--vora-space-4);
+    margin-top: var(--vora-space-2);
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }

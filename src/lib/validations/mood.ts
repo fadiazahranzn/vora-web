@@ -8,13 +8,24 @@ export const moodEnum = z.enum([
   'SAD',
   'ANGRY',
 ])
+
 export const activityEnum = z.enum([
   'SHORT_BREAK',
   'DEEP_BREATHING',
   'CALMING_MUSIC',
   'TALK_TO_SOMEONE',
   'GO_FOR_WALK',
+  'STAY_HYDRATED',
 ])
+
+const activityMap: Record<string, z.infer<typeof activityEnum>> = {
+  break: 'SHORT_BREAK',
+  breathe: 'DEEP_BREATHING',
+  music: 'CALMING_MUSIC',
+  talk: 'TALK_TO_SOMEONE',
+  walk: 'GO_FOR_WALK',
+  hydrate: 'STAY_HYDRATED',
+}
 
 export const createMoodCheckinSchema = z.object({
   habitId: z.string().uuid(),
@@ -26,7 +37,14 @@ export const createMoodCheckinSchema = z.object({
     .string()
     .max(500, 'Reflection text must be 500 characters or less')
     .optional(),
-  selectedActivity: activityEnum.optional().nullable(),
+  selectedActivity: z
+    .preprocess((val) => {
+      if (typeof val === 'string' && activityMap[val]) {
+        return activityMap[val]
+      }
+      return val
+    }, activityEnum.optional().nullable())
+    .optional(),
 })
 
 export const moodQuerySchema = z.object({

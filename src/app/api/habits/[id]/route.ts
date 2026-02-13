@@ -5,11 +5,11 @@ import { updateHabitSchema } from '@/lib/validations/habit'
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth()
-    const { id } = params
+    const { id } = await params
 
     const habit = await prisma.habit.findFirst({
       where: { id, userId, deletedAt: null },
@@ -28,11 +28,11 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth()
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
 
     // Validate request
@@ -87,11 +87,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth()
-    const { id } = params
+    const { id } = await params
 
     const habit = await prisma.habit.findFirst({
       where: { id, userId, deletedAt: null },

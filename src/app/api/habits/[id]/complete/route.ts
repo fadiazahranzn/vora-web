@@ -5,11 +5,11 @@ import { isSameDay, startOfDay } from 'date-fns'
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth()
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
     const dateInput = body.date ? new Date(body.date) : new Date()
 
@@ -96,11 +96,11 @@ export async function POST(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth()
-    const { id } = params
+    const { id } = await params
     const { searchParams } = new URL(req.url)
     const dateStr = searchParams.get('date')
     const dateInput = dateStr ? new Date(dateStr) : new Date()

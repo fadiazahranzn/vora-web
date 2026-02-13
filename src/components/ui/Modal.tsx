@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { clsx } from 'clsx'
+import styles from './Modal.module.css'
 
 interface ModalProps {
   isOpen: boolean
@@ -45,162 +46,31 @@ export function Modal({
   if (!isOpen) return null
 
   return (
-    <div className="vora-modal-overlay" onClick={onClose}>
+    <div className={styles.overlay} onClick={onClose}>
       <div
-        className={clsx('vora-modal', `vora-modal--${size}`)}
+        className={clsx(styles.modal, styles[`modal_${size}`])}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <header className="vora-modal-header">
-          <h2 id="modal-title" className="vora-modal-title">
+        <header className={styles.header}>
+          <h2 id="modal-title" className={styles.title}>
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="vora-modal-close"
+            className={styles.close}
             aria-label="Close modal"
           >
             <X size={20} />
           </button>
         </header>
 
-        <div className="vora-modal-body">{children}</div>
+        <div className={styles.body}>{children}</div>
 
-        {footer && <footer className="vora-modal-footer">{footer}</footer>}
+        {footer && <footer className={styles.footer}>{footer}</footer>}
       </div>
-
-      <style jsx>{`
-        .vora-modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: var(--vora-color-bg-overlay);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: var(--vora-z-modal);
-          backdrop-filter: blur(4px);
-          padding: var(--vora-space-4);
-          animation: fadeIn var(--vora-duration-normal)
-            var(--vora-easing-decelerate);
-        }
-
-        .vora-modal {
-          background: var(--vora-color-bg-primary);
-          border-radius: var(--vora-radius-xl);
-          width: 100%;
-          max-height: 90vh;
-          display: flex;
-          flex-direction: column;
-          box-shadow: var(--vora-shadow-lg);
-          animation: scaleUp var(--vora-duration-normal)
-            var(--vora-easing-bounce);
-        }
-
-        .vora-modal--sm {
-          max-width: 400px;
-        }
-        .vora-modal--md {
-          max-width: 500px;
-        }
-        .vora-modal--lg {
-          max-width: 650px;
-        }
-
-        @media (max-width: 768px) {
-          .vora-modal-overlay {
-            align-items: flex-end;
-            padding: 0;
-          }
-          .vora-modal {
-            max-height: 95vh;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            animation: slideUp var(--vora-duration-normal)
-              var(--vora-easing-decelerate);
-          }
-        }
-
-        .vora-modal-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: var(--vora-space-6);
-          border-bottom: 1px solid var(--vora-color-border-default);
-        }
-
-        .vora-modal-title {
-          font-size: var(--vora-font-size-h2);
-          font-weight: var(--vora-font-weight-bold);
-          color: var(--vora-color-text-primary);
-        }
-
-        .vora-modal-close {
-          background: transparent;
-          border: none;
-          color: var(--vora-color-text-secondary);
-          cursor: pointer;
-          padding: var(--vora-space-1);
-          border-radius: var(--vora-radius-full);
-          transition: all var(--vora-duration-fast);
-          display: flex;
-        }
-
-        .vora-modal-close:hover {
-          background: var(--vora-color-bg-tertiary);
-          color: var(--vora-color-text-primary);
-        }
-
-        .vora-modal-body {
-          padding: var(--vora-space-6);
-          overflow-y: auto;
-          flex: 1;
-        }
-
-        .vora-modal-footer {
-          padding: var(--vora-space-4) var(--vora-space-6);
-          border-top: 1px solid var(--vora-color-border-default);
-          display: flex;
-          justify-content: flex-end;
-          gap: var(--vora-space-3);
-          background: var(--vora-color-bg-tertiary);
-          border-bottom-left-radius: var(--vora-radius-xl);
-          border-bottom-right-radius: var(--vora-radius-xl);
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes scaleUp {
-          from {
-            transform: scale(0.95);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideUp {
-          from {
-            transform: translateY(100%);
-          }
-          to {
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   )
 }

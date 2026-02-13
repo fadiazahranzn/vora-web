@@ -61,6 +61,7 @@ export const EditHabitModal: React.FC<EditHabitModalProps> = ({
 }) => {
   const queryClient = useQueryClient()
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [frequency, setFrequency] = useState<'DAILY' | 'WEEKLY' | 'MONTHLY'>('DAILY')
 
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ['categories'],
@@ -96,11 +97,11 @@ export const EditHabitModal: React.FC<EditHabitModalProps> = ({
   // Pre-populate form when habit data loads
   useEffect(() => {
     if (habit) {
+      setFrequency(habit.frequency)
       reset({
         name: habit.name,
         categoryId: habit.categoryId,
         color: habit.color,
-        frequency: habit.frequency,
         targetValue: habit.targetValue || 1,
         targetUnit: habit.targetUnit || '',
         weeklyDays: habit.weeklyDays || [],
@@ -111,9 +112,8 @@ export const EditHabitModal: React.FC<EditHabitModalProps> = ({
   }, [habit, reset])
 
   const selectedColor = watch('color')
-  const frequency = watch('frequency')
-  const weeklyDays = watch('weeklyDays') || []
-  const monthlyDates = watch('monthlyDates') || []
+  const weeklyDays = (watch('weeklyDays') as number[] | undefined) || []
+  const monthlyDates = (watch('monthlyDates') as number[] | undefined) || []
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {

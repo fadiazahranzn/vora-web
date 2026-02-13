@@ -48,6 +48,10 @@ export default function Home() {
   useEffect(() => {
     setMounted(true)
     setSelectedDate(new Date())
+
+    // Run auto-postpone on entry (STORY-007)
+    fetch('/api/tasks/auto-postpone', { method: 'POST' })
+      .catch(err => console.error('Auto-postpone error:', err))
   }, [])
 
   // Greeting based on time of day
@@ -131,12 +135,23 @@ export default function Home() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'completion-rate'] })
     },
   })
 
   // Mood Mutation
   const moodMutation = useMutation({
-    mutationFn: async ({ id, mood }: { id: string; mood: MoodType }) => {
+    mutationFn: async ({
+      id,
+      mood,
+      reflection,
+      activity,
+    }: {
+      id: string
+      mood: MoodType
+      reflection?: string
+      activity?: string
+    }) => {
       const res = await fetch('/api/mood-checkins', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -144,13 +159,19 @@ export default function Home() {
           habitId: id,
           date: formattedDate,
           mood,
+          reflectionText: reflection,
+          selectedActivity: activity,
         }),
       })
-      if (!res.ok) throw new Error('Failed to save mood')
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Failed to save mood')
+      }
       return res.json()
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
+      queryClient.invalidateQueries({ queryKey: ['analytics', 'completion-rate'] })
     },
   })
 
@@ -166,17 +187,34 @@ export default function Home() {
     }
   }
 
+  const [lastSelectedMood, setLastSelectedMood] = useState<MoodType | null>(null)
+
   const handleMoodSelect = (mood: MoodType) => {
+    setLastSelectedMood(mood)
     if (activeHabitId) {
       moodMutation.mutate({ id: activeHabitId, mood })
     }
-    setIsMoodModalOpen(false)
-    setActiveHabitId(null)
+    // Note: Modal stays open for reflection/activities step in negative paths
+  }
+
+  const handleMoodDetailsSubmit = (data: {
+    reflection?: string
+    activity?: string
+  }) => {
+    if (activeHabitId && lastSelectedMood) {
+      moodMutation.mutate({
+        id: activeHabitId,
+        mood: lastSelectedMood,
+        reflection: data.reflection,
+        activity: data.activity,
+      })
+    }
   }
 
   const handleMoodSkip = () => {
     setIsMoodModalOpen(false)
     setActiveHabitId(null)
+    setLastSelectedMood(null)
   }
 
   // Group habits by category
@@ -307,6 +345,7 @@ export default function Home() {
           isOpen={isMoodModalOpen}
           onClose={handleMoodSkip}
           onSelect={handleMoodSelect}
+          onDetailsSubmit={handleMoodDetailsSubmit}
           onSkip={handleMoodSkip}
         />
       </div>

@@ -1,0 +1,115 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background: var(--vora-color-bg-secondary);
+    border-radius: var(--vora-radius-lg);
+    padding: var(--vora-space-6);
+    box-shadow: var(--vora-shadow-sm);
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--vora-space-4);
+}
+
+.title {
+    font-family: var(--vora-font-family);
+    font-size: var(--vora-font-size-h3);
+    font-weight: var(--vora-font-weight-bold);
+    color: var(--vora-color-text-primary);
+    margin: 0;
+}
+
+.toggleGroup {
+    display: flex;
+    background: var(--vora-color-bg-tertiary);
+    border-radius: var(--vora-radius-md);
+    padding: 4px;
+    /* small padding for the toggle container */
+}
+
+.toggleButton {
+    background: transparent;
+    border: none;
+    border-radius: var(--vora-radius-sm);
+    padding: var(--vora-space-2) var(--vora-space-4);
+    font-family: var(--vora-font-family);
+    font-size: var(--vora-font-size-sm);
+    font-weight: var(--vora-font-weight-medium);
+    color: var(--vora-color-text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.toggleButton:hover {
+    color: var(--vora-color-text-primary);
+    background: var(--vora-color-bg-hover);
+}
+
+.active {
+    background: var(--vora-color-bg-surface);
+    color: var(--vora-color-primary);
+    box-shadow: var(--vora-shadow-sm);
+}
+
+.chartContainer {
+    width: 100%;
+    height: 300px;
+    position: relative;
+}
+
+/* Custom Tooltip Styling */
+.tooltip {
+    background: var(--vora-color-bg-popover);
+    border: 1px solid var(--vora-color-border);
+    border-radius: var(--vora-radius-md);
+    padding: var(--vora-space-3);
+    box-shadow: var(--vora-shadow-md);
+}
+
+.tooltipDate {
+    font-size: var(--vora-font-size-sm);
+    color: var(--vora-color-text-secondary);
+    margin-bottom: var(--vora-space-1);
+}
+
+.tooltipValue {
+    font-size: var(--vora-font-size-body);
+    font-weight: var(--vora-font-weight-bold);
+    color: var(--vora-color-primary);
+}
+
+.loadingState,
+.errorState,
+.emptyState {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    color: var(--vora-color-text-secondary);
+    font-size: var(--vora-font-size-body);
+}
+
+/* Mobile Tweaks */
+@media (max-width: 640px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--vora-space-4);
+    }
+
+    .toggleGroup {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .toggleButton {
+        flex: 1;
+        text-align: center;
+        padding: var(--vora-space-2) var(--vora-space-2);
+    }
+}

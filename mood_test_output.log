@@ -1,0 +1,41 @@
+﻿
+> vora-web-app@0.1.0 test
+> vitest run src/__tests__/api/mood-checkins/route.test.ts src/__tests__/components/mood/MoodCheckinModal.test.tsx src/__tests__/integration/HabitTracking.test.tsx
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/FADIA/Target-Tracking-Goal/prompter/vora-web-app[39m
+
+ [32mΓ£ô[39m src/__tests__/api/mood-checkins/route.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+node.exe : [90mstderr[2m | src/__tests__/integrati
+on/HabitTracking.test.tsx[2m > [22m[2mHabit 
+Integration Flow[2m > [22m[2mshould open mood 
+modal when completing a habit
+At C:\Users\FADIA\nodejs\npm.ps1:29 char:3
++   & $NODE_EXE $NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90ms 
+   tderr[2m...pleting a habit:String) [], RemoteE  
+  xception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39mReceived `true` for a non-boolean 
+attribute `jsx`.
+
+If you want to write it to the DOM, pass a string 
+instead: jsx="true" or jsx={value.toString()}.
+Received `true` for a non-boolean attribute 
+`global`.
+
+If you want to write it to the DOM, pass a string 
+instead: global="true" or global={value.toString()}.
+
+ [32mΓ£ô[39m src/__tests__/integration/HabitTracking.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 940[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should open mood modal when completing a habit [33m 938[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/components/mood/MoodCheckinModal.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2843[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should handle Positive Path (Happy) [33m 2472[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m 15:52:03
+[2m   Duration [22m 6.03s[2m (transform 1.04s, setup 814ms, import 5.83s, tests 3.81s, environment 5.03s)[22m
+
