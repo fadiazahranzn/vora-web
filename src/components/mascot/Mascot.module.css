@@ -1,0 +1,150 @@
+.mascotContainer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: visible;
+}
+
+.mascotBase {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Transitions */
+.fadeEnter {
+    opacity: 0;
+}
+
+.fadeEnterActive {
+    opacity: 1;
+    transition: opacity 300ms ease-in-out;
+}
+
+.fadeExit {
+    opacity: 1;
+}
+
+.fadeExitActive {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+}
+
+/* Animations */
+
+/* Wave Animation */
+.animateWave {
+    animation: mascotWave 2s ease-in-out infinite;
+    transform-origin: 75% 75%;
+}
+
+@keyframes mascotWave {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(10deg);
+    }
+
+    75% {
+        transform: rotate(-5deg);
+    }
+}
+
+/* Jump Animation */
+.animateJump {
+    animation: mascotJump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+@keyframes mascotJump {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15%);
+    }
+}
+
+/* Bounce Animation (Idle) */
+.animateBounce {
+    animation: mascotBounce 3s ease-in-out infinite;
+}
+
+@keyframes mascotBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5%);
+    }
+}
+
+/* Pointing Animation */
+.animatePoint {
+    animation: mascotPoint 2s ease-in-out infinite;
+}
+
+@keyframes mascotPoint {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(8%);
+    }
+}
+
+/* Beckoning / Encouraging Animation */
+.animateEncourage {
+    animation: mascotEncourage 2s ease-in-out infinite;
+}
+
+@keyframes mascotEncourage {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .animateWave,
+    .animateJump,
+    .animateBounce,
+    .animatePoint,
+    .animateEncourage {
+        animation: none !important;
+        transform: none !important;
+    }
+}

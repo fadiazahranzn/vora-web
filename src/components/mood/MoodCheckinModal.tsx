@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Modal } from '@/components/ui/Modal'
-import { Mascot, MascotExpression } from '@/components/ui/Mascot'
+import { Mascot, MascotExpression } from '@/components/mascot/Mascot'
 import { Button } from '@/components/ui/Button'
 import { clsx } from 'clsx'
 import styles from './MoodCheckinModal.module.css'
@@ -84,9 +84,8 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
   const [empatheticMessage, setEmpatheticMessage] = useState('')
   const [reflection, setReflection] = useState('')
   const [selectedActivity, setSelectedActivity] = useState<string | null>(null)
-  const [mascotExpression, setMascotExpression] = useState<MascotExpression>(
-    'happy'
-  )
+  const [mascotExpression, setMascotExpression] =
+    useState<MascotExpression>('happy')
 
   // Reset view when modal opens
   useEffect(() => {
@@ -108,7 +107,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
 
     // Update mascot expression immediately
     if (mood === 'HAPPY' || mood === 'PROUD') {
-      setMascotExpression('cheering')
+      setMascotExpression('celebrating')
     } else {
       setMascotExpression('concerned')
     }
@@ -124,7 +123,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
         setView('CELEBRATION')
         setCelebrationMessage(
           CONGRATS_MESSAGES[
-          Math.floor(Math.random() * CONGRATS_MESSAGES.length)
+            Math.floor(Math.random() * CONGRATS_MESSAGES.length)
           ]
         )
         setAnnouncement('Celebration! ' + celebrationMessage)
@@ -162,7 +161,10 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
         }, 2000)
       } else {
         // Negative mood path
-        const randomMsg = EMPATHETIC_MESSAGES[Math.floor(Math.random() * EMPATHETIC_MESSAGES.length)]
+        const randomMsg =
+          EMPATHETIC_MESSAGES[
+            Math.floor(Math.random() * EMPATHETIC_MESSAGES.length)
+          ]
         setEmpatheticMessage(randomMsg)
         setView('REFLECTION')
         setAnnouncement(`${randomMsg}. Reflection step.`)
@@ -173,7 +175,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
   const handleReflectionSkip = () => {
     setReflection('')
     setView('ACTIVITIES')
-    setMascotExpression('neutral')
+    setMascotExpression('happy')
     setAnnouncement('What would help? Select a calming activity.')
   }
 
@@ -182,13 +184,13 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
       onDetailsSubmit?.({ reflection })
     }
     setView('ACTIVITIES')
-    setMascotExpression('neutral')
+    setMascotExpression('happy')
     setAnnouncement('What would help? Select a calming activity.')
   }
 
   const handleActivitySkip = () => {
     setView('SUPPORT')
-    setMascotExpression('supportive')
+    setMascotExpression('waving')
     setAnnouncement('You got this! Skipped activity.')
     setTimeout(() => onSkip(), 2500)
   }
@@ -198,7 +200,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
       onDetailsSubmit?.({ reflection, activity: selectedActivity })
     }
     setView('SUPPORT')
-    setMascotExpression('supportive')
+    setMascotExpression('waving')
     setAnnouncement('You got this!')
     setTimeout(() => onSkip(), 2500)
   }
@@ -224,12 +226,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
   if (view === 'SUPPORT') modalTitle = 'You Got This!'
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onSkip}
-      title={modalTitle}
-      size="md"
-    >
+    <Modal isOpen={isOpen} onClose={onSkip} title={modalTitle} size="md">
       <div className="sr-only" aria-live="polite">
         {announcement}
       </div>
@@ -327,7 +324,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
                 className={clsx(
                   styles.activityCard,
                   selectedActivity === activity.id &&
-                  styles.activityCardSelected
+                    styles.activityCardSelected
                 )}
                 onClick={() => setSelectedActivity(activity.id)}
                 aria-pressed={selectedActivity === activity.id}
@@ -357,9 +354,7 @@ export const MoodCheckinModal: React.FC<MoodCheckinModalProps> = ({
 
       {view === 'SUPPORT' && (
         <div className={styles.supportContent}>
-          <h3 className={styles.supportMessage}>
-            We&apos;re rooting for you!
-          </h3>
+          <h3 className={styles.supportMessage}>We&apos;re rooting for you!</h3>
         </div>
       )}
     </Modal>

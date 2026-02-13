@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { Mascot } from '@/components/ui/Mascot'
+import { Mascot } from '@/components/mascot/Mascot'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { FAB } from '@/components/ui/FAB'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -49,8 +49,9 @@ export default function Home() {
     setSelectedDate(new Date())
 
     // Run auto-postpone on entry (STORY-007)
-    fetch('/api/tasks/auto-postpone', { method: 'POST' })
-      .catch(err => console.error('Auto-postpone error:', err))
+    fetch('/api/tasks/auto-postpone', { method: 'POST' }).catch((err) =>
+      console.error('Auto-postpone error:', err)
+    )
   }, [])
 
   // Greeting based on time of day
@@ -134,7 +135,9 @@ export default function Home() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
-      queryClient.invalidateQueries({ queryKey: ['analytics', 'completion-rate'] })
+      queryClient.invalidateQueries({
+        queryKey: ['analytics', 'completion-rate'],
+      })
     },
   })
 
@@ -170,7 +173,9 @@ export default function Home() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['habits', formattedDate] })
-      queryClient.invalidateQueries({ queryKey: ['analytics', 'completion-rate'] })
+      queryClient.invalidateQueries({
+        queryKey: ['analytics', 'completion-rate'],
+      })
     },
   })
 
@@ -186,7 +191,9 @@ export default function Home() {
     }
   }
 
-  const [lastSelectedMood, setLastSelectedMood] = useState<MoodType | null>(null)
+  const [lastSelectedMood, setLastSelectedMood] = useState<MoodType | null>(
+    null
+  )
 
   const handleMoodSelect = (mood: MoodType) => {
     setLastSelectedMood(mood)
@@ -260,10 +267,10 @@ export default function Home() {
           size={100}
           expression={
             completionRate === 100
-              ? 'happy'
-              : completionRate > 50
-                ? 'motivated'
-                : 'neutral'
+              ? 'celebrating'
+              : completionRate === 0
+                ? 'encouraging'
+                : 'waving'
           }
         />
       </section>
@@ -347,6 +354,5 @@ export default function Home() {
         onSkip={handleMoodSkip}
       />
     </div>
-
   )
 }
