@@ -1,0 +1,88 @@
+
+> vora-web-app@0.1.0 lint
+> cross-env SKIP_ENV_VALIDATION=1 eslint .
+
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\scripts\check-bundle-size.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\api\analytics\heatmap.test.ts
+  5:10  error  'format' is defined but never used          @typescript-eslint/no-unused-vars
+  5:18  error  'getDaysInMonth' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\api\analytics\stats.test.ts
+  5:10  error  'format' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\api\mood-checkins\route.test.ts
+  25:29  error  'error' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  83:19  error  'data' is assigned a value but never used                                @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\components\CircularProgress.test.tsx
+  1:26  error  'act' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\components\HeatmapCalendar.test.tsx
+  65:10  error  'makeMockHeatmapData' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\components\StatsCards.test.tsx
+  15:15  error  'size' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  16:16  error  'size' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  17:14  error  'size' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  18:18  error  'size' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\components\ui\Button.test.tsx
+  1:26  error  'fireEvent' is defined but never used   @typescript-eslint/no-unused-vars
+  4:36  error  'beforeEach' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\components\ui\Modal.test.tsx
+  4:48  error  'afterEach' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\security.test.ts
+  43:9  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  45:9  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\__tests__\validations\task.test.ts
+   54:21  error  'description' is assigned a value but never used   @typescript-eslint/no-unused-vars
+   79:21  error  'dueDate' is assigned a value but never used       @typescript-eslint/no-unused-vars
+   91:21  error  'priority' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  116:21  error  'recurrence' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  136:21  error  'autoPostpone' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\app\api\analytics\heatmap\[date]\route.ts
+  6:5  error  'format' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\app\api\analytics\stats\route.ts
+  12:27  error  'req' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\components\analytics\ActivityChartImpl.tsx
+  13:10  error  'format' is defined but never used                                      @typescript-eslint/no-unused-vars
+  13:18  error  'parseISO' is defined but never used                                    @typescript-eslint/no-unused-vars
+  26:70  error  'view' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\components\analytics\ActivityLineChart.test.tsx
+  83:15  error  'yearlyBtn' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\components\analytics\ActivityLineChart.tsx
+  3:37  error  'useMemo' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\components\analytics\HeatmapCalendar.tsx
+  12:5   error  'isSameMonth' is defined but never used            @typescript-eslint/no-unused-vars
+  13:5   error  'isSameDay' is defined but never used              @typescript-eslint/no-unused-vars
+  37:11  error  'calendarDays' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\components\ui\Toast.tsx
+  49:8  warning  React Hook useCallback has a missing dependency: 'removeToast'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\components\ui\Toggle.tsx
+  13:28  error  React Hook "React.useId" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+C:\Users\FADIA\Target-Tracking-Goal\prompter\vora-web-app\src\lib\services\recurrence.ts
+  57:9  error  'id' is assigned a value but never used               @typescript-eslint/no-unused-vars
+  58:9  error  'createdAt' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  59:9  error  'updatedAt' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  60:9  error  'completedAt' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  61:9  error  'originalDueDate' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 41 problems (40 errors, 1 warning)
+

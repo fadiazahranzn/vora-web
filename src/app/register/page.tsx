@@ -175,7 +175,7 @@ export default function RegisterPage() {
             {...register('confirmPassword')}
           />
 
-          <Button type="submit" size="full" isLoading={isLoading}>
+          <Button type="submit" fullWidth isLoading={isLoading}>
             Create Account
           </Button>
         </form>
@@ -184,7 +184,7 @@ export default function RegisterPage() {
 
         <Button
           variant="secondary"
-          size="full"
+          fullWidth
           onClick={handleGoogleSignIn}
           disabled={isLoading}
           leftIcon={

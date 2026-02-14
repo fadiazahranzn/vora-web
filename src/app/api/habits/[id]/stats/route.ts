@@ -5,11 +5,11 @@ import { calculateStreaks } from '@/lib/services/streak'
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth()
-    const { id } = params
+    const { id } = await params
 
     // Fetch habit and its completions
     const habit = await prisma.habit.findFirst({

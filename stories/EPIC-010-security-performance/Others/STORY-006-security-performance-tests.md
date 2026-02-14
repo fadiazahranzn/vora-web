@@ -60,11 +60,11 @@ THEN all category scores meet minimum targets
 - **External Dependencies:** bundlesize, @lhci/cli
 
 ## Definition of Done
-- [ ] Security header tests passing
-- [ ] Rate limit tests passing
-- [ ] Input sanitization tests with XSS payloads
-- [ ] CSRF validation tests passing
-- [ ] Bundle size assertion tests passing
-- [ ] Lighthouse CI budget tests configured and passing
-- [ ] All tests in CI
+- [x] Security header tests passing
+- [x] Rate limit tests passing
+- [x] Input sanitization tests with XSS payloads
+- [x] CSRF validation tests passing
+- [x] Bundle size assertion tests passing
+- [x] Lighthouse CI budget tests configured and passing
+- [x] All tests in CI
 - [ ] Code merged to main branch

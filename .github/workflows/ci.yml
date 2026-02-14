@@ -42,3 +42,6 @@ jobs:
         run: npm run build
         env:
           SKIP_ENV_VALIDATION: 1
+
+      - name: Check Bundle Size
+        run: npm run test:bundle

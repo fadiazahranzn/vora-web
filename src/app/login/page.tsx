@@ -115,7 +115,7 @@ export default function LoginPage() {
             {...register('password')}
           />
 
-          <Button type="submit" size="full" isLoading={isLoading}>
+          <Button type="submit" fullWidth isLoading={isLoading}>
             Log In
           </Button>
         </form>
@@ -124,7 +124,7 @@ export default function LoginPage() {
 
         <Button
           variant="secondary"
-          size="full"
+          fullWidth
           onClick={handleGoogleSignIn}
           disabled={isLoading}
           leftIcon={

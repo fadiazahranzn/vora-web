@@ -7,31 +7,33 @@ import { vi, describe, it, expect, beforeEach } from 'vitest'
 
 // Mock the useStats hook
 vi.mock('@/hooks/useStats', () => ({
-    useStats: vi.fn(),
+  useStats: vi.fn(),
 }))
 
 // Mock lucide-react icons to avoid SVG rendering issues
 vi.mock('lucide-react', () => ({
-    Flame: ({ size }: any) => <span data-testid="icon-flame">🔥</span>,
-    Trophy: ({ size }: any) => <span data-testid="icon-trophy">🏆</span>,
-    Star: ({ size }: any) => <span data-testid="icon-star">⭐</span>,
-    Calendar: ({ size }: any) => <span data-testid="icon-calendar">📅</span>,
+  Flame: ({ size: _size }: any) => <span data-testid="icon-flame">🔥</span>,
+  Trophy: ({ size: _size }: any) => <span data-testid="icon-trophy">🏆</span>,
+  Star: ({ size: _size }: any) => <span data-testid="icon-star">⭐</span>,
+  Calendar: ({ size: _size }: any) => (
+    <span data-testid="icon-calendar">📅</span>
+  ),
 }))
 
 // Mock the Card component
 vi.mock('@/components/ui/Card', () => ({
-    Card: ({ children, className }: any) => (
-        <div data-testid="card" className={className}>
-            {children}
-        </div>
-    ),
+  Card: ({ children, className }: any) => (
+    <div data-testid="card" className={className}>
+      {children}
+    </div>
+  ),
 }))
 
 // Mock the Skeleton component
 vi.mock('@/components/ui/Skeleton', () => ({
-    Skeleton: ({ className }: any) => (
-        <div data-testid="skeleton" className={className} />
-    ),
+  Skeleton: ({ className }: any) => (
+    <div data-testid="skeleton" className={className} />
+  ),
 }))
 
 const { useStats } = await import('@/hooks/useStats')
@@ -39,146 +41,146 @@ const { useStats } = await import('@/hooks/useStats')
 // ---------- Test Suite ----------
 
 describe('StatsCards', () => {
-    beforeEach(() => {
-        vi.clearAllMocks()
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  // ---- Loading state ----
+
+  it('renders skeleton loaders while loading', () => {
+    ;(useStats as any).mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      error: null,
     })
 
-    // ---- Loading state ----
+    render(<StatsCards />)
 
-    it('renders skeleton loaders while loading', () => {
-        ; (useStats as any).mockReturnValue({
-            data: undefined,
-            isLoading: true,
-            error: null,
-        })
+    const skeletons = screen.getAllByTestId('skeleton')
+    expect(skeletons).toHaveLength(4)
+  })
 
-        render(<StatsCards />)
+  // ---- Error state ----
 
-        const skeletons = screen.getAllByTestId('skeleton')
-        expect(skeletons).toHaveLength(4)
+  it('renders error message when fetch fails', () => {
+    ;(useStats as any).mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: new Error('Failed'),
     })
 
-    // ---- Error state ----
+    render(<StatsCards />)
 
-    it('renders error message when fetch fails', () => {
-        ; (useStats as any).mockReturnValue({
-            data: undefined,
-            isLoading: false,
-            error: new Error('Failed'),
-        })
+    expect(screen.getByText('Error loading statistics')).toBeInTheDocument()
+  })
 
-        render(<StatsCards />)
+  // ---- Renders all four cards ----
 
-        expect(screen.getByText('Error loading statistics')).toBeInTheDocument()
+  it('renders four stat cards with correct labels', () => {
+    ;(useStats as any).mockReturnValue({
+      data: {
+        currentStreak: 5,
+        longestStreak: 10,
+        perfectDays: 8,
+        activeDays: 20,
+      },
+      isLoading: false,
+      error: null,
     })
 
-    // ---- Renders all four cards ----
+    render(<StatsCards />)
 
-    it('renders four stat cards with correct labels', () => {
-        ; (useStats as any).mockReturnValue({
-            data: {
-                currentStreak: 5,
-                longestStreak: 10,
-                perfectDays: 8,
-                activeDays: 20,
-            },
-            isLoading: false,
-            error: null,
-        })
+    expect(screen.getByText('Current Streak')).toBeInTheDocument()
+    expect(screen.getByText('Longest Streak')).toBeInTheDocument()
+    expect(screen.getByText('Perfect Days')).toBeInTheDocument()
+    expect(screen.getByText('Active Days')).toBeInTheDocument()
+  })
 
-        render(<StatsCards />)
+  // ---- Displays the correct values ----
 
-        expect(screen.getByText('Current Streak')).toBeInTheDocument()
-        expect(screen.getByText('Longest Streak')).toBeInTheDocument()
-        expect(screen.getByText('Perfect Days')).toBeInTheDocument()
-        expect(screen.getByText('Active Days')).toBeInTheDocument()
+  it('displays correct stat values after count-up animation', async () => {
+    ;(useStats as any).mockReturnValue({
+      data: {
+        currentStreak: 5,
+        longestStreak: 10,
+        perfectDays: 8,
+        activeDays: 20,
+      },
+      isLoading: false,
+      error: null,
     })
 
-    // ---- Displays the correct values ----
+    render(<StatsCards />)
 
-    it('displays correct stat values after count-up animation', async () => {
-        ; (useStats as any).mockReturnValue({
-            data: {
-                currentStreak: 5,
-                longestStreak: 10,
-                perfectDays: 8,
-                activeDays: 20,
-            },
-            isLoading: false,
-            error: null,
-        })
+    // The count-up animation takes ~1s. Wait for final values.
+    await waitFor(
+      () => {
+        expect(screen.getByText(/5/)).toBeInTheDocument()
+        expect(screen.getByText(/10/)).toBeInTheDocument()
+        expect(screen.getByText(/8/)).toBeInTheDocument()
+        expect(screen.getByText(/20/)).toBeInTheDocument()
+      },
+      { timeout: 2000 }
+    )
+  })
 
-        render(<StatsCards />)
+  // ---- Handles zero values (empty state) ----
 
-        // The count-up animation takes ~1s. Wait for final values.
-        await waitFor(
-            () => {
-                expect(screen.getByText(/5/)).toBeInTheDocument()
-                expect(screen.getByText(/10/)).toBeInTheDocument()
-                expect(screen.getByText(/8/)).toBeInTheDocument()
-                expect(screen.getByText(/20/)).toBeInTheDocument()
-            },
-            { timeout: 2000 }
-        )
+  it('renders zero values for all stats when data is empty', () => {
+    ;(useStats as any).mockReturnValue({
+      data: {
+        currentStreak: 0,
+        longestStreak: 0,
+        perfectDays: 0,
+        activeDays: 0,
+      },
+      isLoading: false,
+      error: null,
     })
 
-    // ---- Handles zero values (empty state) ----
+    render(<StatsCards />)
 
-    it('renders zero values for all stats when data is empty', () => {
-        ; (useStats as any).mockReturnValue({
-            data: {
-                currentStreak: 0,
-                longestStreak: 0,
-                perfectDays: 0,
-                activeDays: 0,
-            },
-            isLoading: false,
-            error: null,
-        })
+    // All four labels should still render
+    expect(screen.getByText('Current Streak')).toBeInTheDocument()
+    expect(screen.getByText('Longest Streak')).toBeInTheDocument()
+    expect(screen.getByText('Perfect Days')).toBeInTheDocument()
+    expect(screen.getByText('Active Days')).toBeInTheDocument()
+  })
 
-        render(<StatsCards />)
+  // ---- Renders icons ----
 
-        // All four labels should still render
-        expect(screen.getByText('Current Streak')).toBeInTheDocument()
-        expect(screen.getByText('Longest Streak')).toBeInTheDocument()
-        expect(screen.getByText('Perfect Days')).toBeInTheDocument()
-        expect(screen.getByText('Active Days')).toBeInTheDocument()
+  it('renders all four icons', () => {
+    ;(useStats as any).mockReturnValue({
+      data: {
+        currentStreak: 1,
+        longestStreak: 1,
+        perfectDays: 1,
+        activeDays: 1,
+      },
+      isLoading: false,
+      error: null,
     })
 
-    // ---- Renders icons ----
+    render(<StatsCards />)
 
-    it('renders all four icons', () => {
-        ; (useStats as any).mockReturnValue({
-            data: {
-                currentStreak: 1,
-                longestStreak: 1,
-                perfectDays: 1,
-                activeDays: 1,
-            },
-            isLoading: false,
-            error: null,
-        })
+    expect(screen.getByTestId('icon-flame')).toBeInTheDocument()
+    expect(screen.getByTestId('icon-trophy')).toBeInTheDocument()
+    expect(screen.getByTestId('icon-star')).toBeInTheDocument()
+    expect(screen.getByTestId('icon-calendar')).toBeInTheDocument()
+  })
 
-        render(<StatsCards />)
+  // ---- Handles undefined data gracefully ----
 
-        expect(screen.getByTestId('icon-flame')).toBeInTheDocument()
-        expect(screen.getByTestId('icon-trophy')).toBeInTheDocument()
-        expect(screen.getByTestId('icon-star')).toBeInTheDocument()
-        expect(screen.getByTestId('icon-calendar')).toBeInTheDocument()
+  it('defaults to 0 when data values are undefined', () => {
+    ;(useStats as any).mockReturnValue({
+      data: {},
+      isLoading: false,
+      error: null,
     })
 
-    // ---- Handles undefined data gracefully ----
+    render(<StatsCards />)
 
-    it('defaults to 0 when data values are undefined', () => {
-        ; (useStats as any).mockReturnValue({
-            data: {},
-            isLoading: false,
-            error: null,
-        })
-
-        render(<StatsCards />)
-
-        // Should render with ?? 0 fallback
-        expect(screen.getByText('Current Streak')).toBeInTheDocument()
-    })
+    // Should render with ?? 0 fallback
+    expect(screen.getByText('Current Streak')).toBeInTheDocument()
+  })
 })

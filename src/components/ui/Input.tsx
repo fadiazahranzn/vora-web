@@ -1,31 +1,53 @@
-import React, { useId } from 'react';
-import styles from './Input.module.css';
+import React, { useId } from 'react'
+import { clsx } from 'clsx'
+import styles from './Input.module.css'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
-  label?: string;
-  error?: string;
-  helperText?: string;
-  multiline?: boolean;
+export interface InputProps extends React.InputHTMLAttributes<
+  HTMLInputElement | HTMLTextAreaElement
+> {
+  label?: string
+  error?: string
+  helperText?: string
+  multiline?: boolean
+  leadingIcon?: React.ReactNode
+  trailingIcon?: React.ReactNode
 }
 
-export const Input = React.forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
-  ({ label, error, helperText, multiline = false, className = '', id, ...props }, ref) => {
-    const generatedId = useId();
-    const inputId = id || generatedId;
-    const errorId = `${inputId}-error`;
-    const helperId = `${inputId}-helper`;
+export const Input = React.forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  InputProps
+>(
+  (
+    {
+      label,
+      error,
+      helperText,
+      multiline = false,
+      leadingIcon,
+      trailingIcon,
+      className = '',
+      id,
+      ...props
+    },
+    ref
+  ) => {
+    const generatedId = useId()
+    const inputId = id || generatedId
+    const errorId = `${inputId}-error`
+    const helperId = `${inputId}-helper`
 
     const inputClasses = [
       styles.input,
       error ? styles.error : '',
       multiline ? styles.textarea : '',
-      className
-    ].filter(Boolean).join(' ');
+      className,
+    ]
+      .filter(Boolean)
+      .join(' ')
 
-    const ariaDescribedBy = [
-      error ? errorId : '',
-      helperText ? helperId : ''
-    ].filter(Boolean).join(' ');
+    const ariaDescribedBy = [error ? errorId : '', helperText ? helperId : '']
+      .filter(Boolean)
+      .join(' ')
 
     return (
       <div className={styles.container}>
@@ -35,26 +57,41 @@ export const Input = React.forwardRef<HTMLInputElement | HTMLTextAreaElement, In
           </label>
         )}
         <div className={styles.inputWrapper}>
+          {leadingIcon && (
+            <div className={styles.leadingIcon}>{leadingIcon}</div>
+          )}
           {multiline ? (
             <textarea
               id={inputId}
               ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
-              className={inputClasses}
+              className={clsx(
+                inputClasses,
+                leadingIcon && styles.withLeadingIcon,
+                trailingIcon && styles.withTrailingIcon
+              )}
               aria-invalid={!!error}
               aria-describedby={ariaDescribedBy || undefined}
-              {...props as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
+              {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
             />
           ) : (
             <input
               id={inputId}
               ref={ref as React.ForwardedRef<HTMLInputElement>}
-              className={inputClasses}
+              className={clsx(
+                inputClasses,
+                leadingIcon && styles.withLeadingIcon,
+                trailingIcon && styles.withTrailingIcon
+              )}
               aria-invalid={!!error}
               aria-describedby={ariaDescribedBy || undefined}
-              {...props as React.InputHTMLAttributes<HTMLInputElement>}
+              {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
             />
           )}
+          {trailingIcon && (
+            <div className={styles.trailingIcon}>{trailingIcon}</div>
+          )}
         </div>
+
         {error && (
           <span id={errorId} className={styles.errorText} role="alert">
             {error}
@@ -66,8 +103,8 @@ export const Input = React.forwardRef<HTMLInputElement | HTMLTextAreaElement, In
           </span>
         )}
       </div>
-    );
+    )
   }
-);
+)
 
-Input.displayName = 'Input';
+Input.displayName = 'Input'

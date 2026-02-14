@@ -4,7 +4,40 @@ import React, { useState, useMemo, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { Mascot } from '@/components/mascot/Mascot'
+import dynamic from 'next/dynamic'
+
+// Dynamically load heavy components
+const Mascot = dynamic(
+  () => import('@/components/mascot/Mascot').then((mod) => mod.Mascot),
+  {
+    ssr: true,
+  }
+)
+const HabitWizard = dynamic(
+  () => import('@/components/habit/HabitWizard').then((mod) => mod.HabitWizard),
+  {
+    ssr: false,
+  }
+)
+const EditHabitModal = dynamic(
+  () =>
+    import('@/components/habit/EditHabitModal').then(
+      (mod) => mod.EditHabitModal
+    ),
+  {
+    ssr: false,
+  }
+)
+const MoodCheckinModal = dynamic(
+  () =>
+    import('@/components/mood/MoodCheckinModal').then(
+      (mod) => mod.MoodCheckinModal
+    ),
+  {
+    ssr: false,
+  }
+)
+
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { FAB } from '@/components/ui/FAB'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -12,10 +45,9 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { SyncStatusBadge } from '@/components/ui/SyncStatusBadge'
 import { HabitCard } from '@/components/habit/HabitCard'
-import { HabitWizard } from '@/components/habit/HabitWizard'
-import { EditHabitModal } from '@/components/habit/EditHabitModal'
-import { MoodCheckinModal, MoodType } from '@/components/mood/MoodCheckinModal'
 import { apiFetch } from '@/lib/api-client'
+import type { MoodType } from '@/components/mood/MoodCheckinModal'
+
 import styles from './page.module.css'
 
 interface Category {

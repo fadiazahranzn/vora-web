@@ -1,0 +1,30 @@
+.next/types/validator.ts(287,39): error TS2307: Cannot find module '../../src/app/api/tasks/[taskId]/postpone-history/route.js' or its corresponding type declarations.
+.next/types/validator.ts(296,39): error TS2307: Cannot find module '../../src/app/api/tasks/[taskId]/subtasks/[id]/route.js' or its corresponding type declarations.
+.next/types/validator.ts(305,39): error TS2307: Cannot find module '../../src/app/api/tasks/[taskId]/subtasks/route.js' or its corresponding type declarations.
+src/__tests__/api/analytics/heatmap-detail.test.ts(62,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(75,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(94,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(120,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(137,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(162,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(178,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/analytics/heatmap-detail.test.ts(189,42): error TS2345: Argument of type '{ params: { date: string; }; }' is not assignable to parameter of type '{ params: Promise<{ date: string; }>; }'.
+  Types of property 'params' are incompatible.
+    Type '{ date: string; }' is missing the following properties from type 'Promise<{ date: string; }>': then, catch, finally, [Symbol.toStringTag]
+src/__tests__/api/tasks/[taskId]/postpone-history/route.test.ts(2,21): error TS2307: Cannot find module '@/app/api/tasks/[taskId]/postpone-history/route' or its corresponding type declarations.
+src/__tests__/api/tasks/[taskId]/subtasks/[id]/route.test.ts(2,31): error TS2307: Cannot find module '@/app/api/tasks/[taskId]/subtasks/[id]/route' or its corresponding type declarations.
+src/__tests__/api/tasks/[taskId]/subtasks/route.test.ts(2,27): error TS2307: Cannot find module '@/app/api/tasks/[taskId]/subtasks/route' or its corresponding type declarations.

@@ -19,11 +19,33 @@ export const viewport: Viewport = {
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'Vora Web App',
-  description: 'Track your goals and habits',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  ),
+  title: {
+    default: 'Vora - Smart Goal & Habit Tracker',
+    template: '%s | Vora',
+  },
+  description:
+    'Achieve your goals with Vora, the intelligent habit tracker and productivity app. Track daily habits, manage tasks, visualize progress with analytics, and stay motivated with gamification.',
+  keywords: [
+    'habit tracker',
+    'goal tracker',
+    'productivity app',
+    'task management',
+    'daily habits',
+    'progress tracking',
+    'analytics',
+    'gamification',
+    'personal development',
+  ],
+  authors: [{ name: 'Vora Team' }],
+  creator: 'Vora',
+  publisher: 'Vora',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -34,7 +56,54 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
+    icon: [
+      {
+        url: '/icons/manifest-icon-192.maskable.png',
+        sizes: '192x192',
+        type: 'image/png',
+      },
+      {
+        url: '/icons/manifest-icon-512.maskable.png',
+        sizes: '512x512',
+        type: 'image/png',
+      },
+    ],
     apple: '/icons/apple-icon-180.png',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: '/',
+    siteName: 'Vora',
+    title: 'Vora - Smart Goal & Habit Tracker',
+    description:
+      'Achieve your goals with Vora, the intelligent habit tracker and productivity app. Track daily habits, manage tasks, and visualize your progress.',
+    images: [
+      {
+        url: '/icons/manifest-icon-512.maskable.png',
+        width: 512,
+        height: 512,
+        alt: 'Vora Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Vora - Smart Goal & Habit Tracker',
+    description:
+      'Achieve your goals with Vora. Track daily habits, manage tasks, and visualize your progress.',
+    images: ['/icons/manifest-icon-512.maskable.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 }
 
