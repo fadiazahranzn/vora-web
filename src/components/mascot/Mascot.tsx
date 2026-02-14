@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 import styles from './Mascot.module.css'
 import { clsx } from 'clsx'
 
@@ -27,186 +28,18 @@ const SIZE_MAP = {
 
 const MascotSVG: React.FC<{
   expression: MascotExpression
-  animate: boolean
-}> = ({ expression, animate }) => {
+}> = ({ expression }) => {
   return (
-    <svg
-      viewBox="0 0 200 200"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={styles.svg}
-      role="img"
-      aria-label={`Mascot feeling ${expression}`}
-    >
-      {/* Shadow */}
-      <ellipse cx="100" cy="185" rx="50" ry="8" fill="rgba(0,0,0,0.05)" />
-
-      {/* Main Body / Head */}
-      <rect
-        x="40"
-        cy="40"
-        width="120"
-        height="110"
-        rx="40"
-        fill="var(--vora-color-bg-primary)"
-        stroke="var(--vora-color-accent-primary)"
-        strokeWidth="6"
+    <div className={styles.svg} style={{ position: 'relative' }}>
+      <Image
+        src="/images/mascot.webp"
+        alt={`Mascot feeling ${expression}`}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        style={{ objectFit: 'contain' }}
+        priority
       />
-
-      {/* Glow effect */}
-      <rect
-        x="48"
-        cy="48"
-        width="104"
-        height="94"
-        rx="34"
-        stroke="var(--vora-color-accent-subtle)"
-        strokeWidth="2"
-        opacity="0.5"
-      />
-
-      {/* Expression Specific Elements */}
-      <g className={clsx(animate && styles.animateBounce)}>
-        {/* Eyes */}
-        {expression === 'celebrating' ? (
-          <>
-            <path
-              d="M70 85 L85 70 L100 85"
-              stroke="var(--vora-color-accent-primary)"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M115 85 L130 70 L145 85"
-              stroke="var(--vora-color-accent-primary)"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </>
-        ) : expression === 'concerned' ? (
-          <>
-            <circle
-              cx="80"
-              cy="85"
-              r="8"
-              fill="var(--vora-color-text-primary)"
-            />
-            <circle
-              cx="120"
-              cy="85"
-              r="8"
-              fill="var(--vora-color-text-primary)"
-            />
-            <path
-              d="M70 70 L90 75"
-              stroke="var(--vora-color-text-secondary)"
-              strokeWidth="4"
-              strokeLinecap="round"
-            />
-            <path
-              d="M130 70 L110 75"
-              stroke="var(--vora-color-text-secondary)"
-              strokeWidth="4"
-              strokeLinecap="round"
-            />
-          </>
-        ) : (
-          <>
-            <circle
-              cx="80"
-              cy="85"
-              r="9"
-              fill="var(--vora-color-accent-primary)"
-            />
-            <circle
-              cx="120"
-              cy="85"
-              r="9"
-              fill="var(--vora-color-accent-primary)"
-            />
-            {/* Eye glint */}
-            <circle cx="83" cy="82" r="3" fill="white" />
-            <circle cx="123" cy="82" r="3" fill="white" />
-          </>
-        )}
-
-        {/* Mouth */}
-        {expression === 'happy' ||
-        expression === 'waving' ||
-        expression === 'pointing' ? (
-          <path
-            d="M85 115 Q100 130 115 115"
-            stroke="var(--vora-color-accent-primary)"
-            strokeWidth="5"
-            strokeLinecap="round"
-            fill="none"
-          />
-        ) : expression === 'celebrating' ? (
-          <path
-            d="M85 110 Q100 135 115 110 Z"
-            fill="var(--vora-color-accent-primary)"
-          />
-        ) : expression === 'encouraging' ? (
-          <path
-            d="M90 120 H110"
-            stroke="var(--vora-color-accent-primary)"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-        ) : (
-          <path
-            d="M90 125 Q100 115 110 125"
-            stroke="var(--vora-color-text-secondary)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            fill="none"
-          />
-        )}
-      </g>
-
-      {/* Arms & Assets */}
-      {expression === 'waving' && (
-        <g className={clsx(animate && styles.animateWave)}>
-          <path
-            d="M160 110 L185 85"
-            stroke="var(--vora-color-accent-primary)"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <circle
-            cx="185"
-            cy="85"
-            r="10"
-            fill="var(--vora-color-accent-primary)"
-          />
-        </g>
-      )}
-
-      {expression === 'pointing' && (
-        <g className={clsx(animate && styles.animatePoint)}>
-          <path
-            d="M160 110 L190 110"
-            stroke="var(--vora-color-accent-primary)"
-            strokeWidth="8"
-            strokeLinecap="round"
-          />
-          <path
-            d="M180 100 L195 110 L180 120"
-            fill="var(--vora-color-accent-primary)"
-          />
-        </g>
-      )}
-
-      {expression === 'celebrating' && (
-        <>
-          {/* Sparkles */}
-          <path d="M40 30 L45 20 L50 30 L40 30" fill="#FFD600" />
-          <path d="M150 40 L160 30 L170 40 L150 40" fill="#FFD600" />
-        </>
-      )}
-    </svg>
+    </div>
   )
 }
 
@@ -262,7 +95,7 @@ export const Mascot: React.FC<MascotProps> = ({
       }}
     >
       <div className={styles.mascotBase}>
-        <MascotSVG expression={currentExp} animate={animate} />
+        <MascotSVG expression={currentExp} />
       </div>
 
       {isTransitioning && prevExp && (
@@ -274,7 +107,7 @@ export const Mascot: React.FC<MascotProps> = ({
           )}
           style={{ position: 'absolute', top: 0, left: 0 }}
         >
-          <MascotSVG expression={prevExp} animate={false} />
+          <MascotSVG expression={prevExp} />
         </div>
       )}
     </div>
